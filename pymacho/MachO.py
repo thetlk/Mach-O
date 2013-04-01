@@ -31,5 +31,4 @@ class MachO(object):
             
     def load_file(self, macho_file):
         self.header = MachOHeader(macho_file)
-        
-        
+
