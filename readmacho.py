@@ -24,9 +24,22 @@ from pymacho.MachO import MachO
 def main():
     parser = argparse.ArgumentParser(description="Read Mach-O file")
     parser.add_argument('filename', help='Mach-O file to parse and print')
+    parser.add_argument('--headers', '-hd', help='show informations about header', action='store_true')
+    parser.add_argument('--verbose', '-v', help='display many informations', action='store_true')
     args = parser.parse_args()
     
     m = MachO(args.filename)
+    if args.headers:
+        print "[*] Headers :"
+        print "\t[+] magic : 0x%x %s" % (m.header.magic, "- " + m.header.display_magic() if args.verbose else "")
+        print "\t[+] cputype : 0x%x %s" % (m.header.cputype, "- " + m.header.display_cputype() if args.verbose else "")
+        print "\t[+] cpusubtype : 0x%s" % (m.header.cpusubtype)
+        print "\t[+] filetype : 0x%s %s" % (m.header.filetype, "- " + m.header.display_filetype() if args.verbose else "")
+        print "\t[+] ncmds : %d" % (m.header.ncmds)
+        print "\t[+] sizeofcmds : %d byte%s" % (m.header.sizeofcmds, "s" if m.header.sizeofcmds > 1 else "")
+        print "\t[+] flags : 0x%x %s" % (m.header.flags, "- " + ", ".join(m.header.display_flags()) if args.verbose else "")
+        if m.header.is_64():
+            print "\t[+] reserved : 0x%x" % (m.header.reserved)
 
 
 if __name__ == '__main__':
