@@ -20,38 +20,24 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 from struct import unpack
 from pymacho.Constants import *
 
+
 class MachOHeader(object):
     """
     Represent a Mach-O Header
-    
-    struct mach_header
-    {
-        uint32_t magic;
-        cpu_type_t cputype;
-        cpu_subtype_t cpusubtype;
-        uint32_t filetype;
-        uint32_t ncmds;
-        uint32_t sizeofcmds;
-        uint32_t flags;
-    };
-    
-    struct mach_header_64
-    {
-        uint32_t magic;
-        cpu_type_t cputype;
-        cpu_subtype_t cpusubtype;
-        uint32_t filetype;
-        uint32_t ncmds;
-        uint32_t sizeofcmds;
-        uint32_t flags;
-        uint32_t reserved;
-    };
-    
     """
-    
-    def __init__(self, macho_file):
-        self.parse_header(macho_file)
-        
+
+    magic = 0
+    cputype = 0
+    cpusubtype = 0
+    filetype = 0
+    ncmds = 0
+    sizeofcmds = 0
+    flags = 0
+
+    def __init__(self, macho_file=None):
+        if macho_file is not None:
+            self.parse_header(macho_file)
+
     def parse_header(self, macho_file):
         """
         Parse headers from macho_file.
@@ -60,14 +46,13 @@ class MachOHeader(object):
         self.magic, self.cputype, self.cpusubtype, self.filetype = unpack("<IIII", macho_file.read(4*4))
         self.ncmds, self.sizeofcmds, self.flags = unpack('<III', macho_file.read(4*3))
         if self.is_64() is True:
-            self.reserved = unpack('<I', macho_file.read(4)) #  uint32_t reserved on mac_header_64
-        
+            self.reserved = unpack('<I', macho_file.read(4))
+
     def is_64(self):
         """
         Return True if the magic number says 'I am a 64 mach-o file', False in others cases.
         """
         return (self.magic == MH_MAGIC_64 or self.magic == MH_CIGAM_64)
-
 
     def display_magic(self):
         """
@@ -77,7 +62,6 @@ class MachOHeader(object):
             return "64 bits"
         else:
             return "32 bits"
-
 
     def display_cputype(self):
         """
@@ -103,7 +87,6 @@ class MachOHeader(object):
             return "sparc"
         else:
             return "unknow arch"
-
 
     def display_filetype(self):
         """
@@ -133,7 +116,6 @@ class MachOHeader(object):
             return "x86_64 kernel extension"
         else:
             return "unknow filetype"
-
 
     def display_flags(self):
         rflags = []
@@ -217,4 +199,3 @@ class MachOHeader(object):
             rflags.append("NO_HEAP_EXECUTION")
             flags &= ~MH_NO_HEAP_EXECUTION
         return rflags
-
