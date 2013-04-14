@@ -36,9 +36,9 @@ class MachOHeader(object):
 
     def __init__(self, macho_file=None):
         if macho_file is not None:
-            self.parse_header(macho_file)
+            self.parse(macho_file)
 
-    def parse_header(self, macho_file):
+    def parse(self, macho_file):
         """
         Parse headers from macho_file.
         """
@@ -48,7 +48,7 @@ class MachOHeader(object):
         if self.is_64() is True:
             self.reserved = unpack('<I', macho_file.read(4))
 
-    def setFlags(self, flags=[]):
+    def set_flags(self, flags=[]):
         """
         Set self.flags value from flags array
         """
