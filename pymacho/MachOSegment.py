@@ -19,6 +19,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 from struct import unpack
 from pymacho.MachOSection import MachOSection
+from pymacho.Constants import *
 
 
 class MachOSegment(object):
@@ -52,3 +53,24 @@ class MachOSegment(object):
         self.maxprot, self.initprot, self.nsects, self.flags = unpack('<IIII', macho_file.read(4*4))
         for i in range(self.nsects):
             self.sections.append(MachOSection(macho_file, arch=self.arch))
+
+    def set_flags(self, flags=[]):
+        for flag in flags:
+            self.flags += flag
+
+    def display_flags(self):
+        rflags = []
+        flags = self.flags
+        if flags & SG_HIGHVM:
+            rflags.append("HIGHVM")
+            flags &= ~SG_HIGHVM
+        if flags & SG_FVMLIB:
+            rflags.append("FVMLIB")
+            flags &= ~SG_FVMLIB
+        if flags & SG_NORELOC:
+            rflags.append("NORELOC")
+            flags &= ~SG_NORELOC
+        if flags & SG_PROTECTED_VERSION_1:
+            rflags.append("PROTECTED_VERSION_1")
+            flags &= ~SG_PROTECTED_VERSION_1
+        return rflags
