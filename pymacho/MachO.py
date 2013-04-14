@@ -28,7 +28,7 @@ class MachO(object):
     Represent a Mach-O file
     """
 
-    header = None
+    header = MachOHeader()
     segments = []
 
     def __init__(self, filename=None):
