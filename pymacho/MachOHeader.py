@@ -48,6 +48,13 @@ class MachOHeader(object):
         if self.is_64() is True:
             self.reserved = unpack('<I', macho_file.read(4))
 
+    def setFlags(self, flags=[]):
+        """
+        Set self.flags value from flags array
+        """
+        for flag in flags:
+            self.flags += flag
+
     def is_64(self):
         """
         Return True if the magic number says 'I am a 64 mach-o file', False in others cases.
