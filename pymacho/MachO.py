@@ -20,6 +20,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 from struct import unpack
 from pymacho.MachOHeader import MachOHeader
 from pymacho.MachOSegment import MachOSegment
+from pymacho.MachODYLDCommand import MachODYLDCommand
 from pymacho.Constants import *
 
 
@@ -30,6 +31,7 @@ class MachO(object):
 
     header = MachOHeader()
     segments = []
+    commands = []
 
     def __init__(self, filename=None):
         if filename is not None:
@@ -49,9 +51,7 @@ class MachO(object):
             elif cmd == LC_SEGMENT_64:
                 self.segments.append(MachOSegment(macho_file, arch=64))
             elif cmd == LC_DYLD_INFO_ONLY:
-                rebase_off, rebase_size, bind_off, bind_size = unpack('<IIII', macho_file.read(4*4))
-                weak_bind_off, weak_bind_size, lazy_bind_off, lazy_bind_size = unpack('<IIII', macho_file.read(4*4))
-                export_off, export_size = unpack('<II', macho_file.read(2*4))
+                self.commands.append(MachODYLDCommand(macho_file))
             elif cmd == LC_SYMTAB:
                 symoff, nsyms, stroff, strsize = unpack('<IIII', macho_file.read(4*4))
                 self.symboltable = (symoff, nsyms, stroff, strsize)
