@@ -18,6 +18,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
 
 from struct import unpack
+from pymacho.Constants import *
 
 
 class MachOSection(object):
@@ -41,6 +42,10 @@ class MachOSection(object):
         if macho_file is not None:
             self.parse(macho_file)
 
+    def set_flags(self, flags=[]):
+        for flag in flags:
+            self.flags += flag
+
     def parse(self, macho_file):
         self.sectname = "".join(char if char != "\x00" else "" for char in unpack("<cccccccccccccccc", macho_file.read(16)))
         self.segname = "".join(char if char != "\x00" else "" for char in unpack("<cccccccccccccccc", macho_file.read(16)))
@@ -55,3 +60,117 @@ class MachOSection(object):
 
         if self.arch == 64:
             self.reserved3 = unpack('<I', macho_file.read(4))[0]
+
+    def display_flags(self):
+        """
+        From apple source code :
+        /*
+         * The flags field of a section structure is separated into two parts a section
+         * type and section attributes.  The section types are mutually exclusive (it
+         * can only have one type) but the section attributes are not (it may have more
+         * than one attribute).
+         */
+        """
+        rflags = []
+        stype = self.flags & 0xff
+        attributes = self.flags & 0xffffff00
+        if stype & S_REGULAR:
+            rflags.append("S_REGULAR")
+            stype &= ~S_REGULAR
+        if stype & S_ZEROFILL:
+            rflags.append("S_ZEROFILL")
+            stype &= ~S_ZEROFILL
+        if stype & S_CSTRING_LITERALS:
+            rflags.append("S_CSTRING_LITERALS")
+            stype &= ~S_CSTRING_LITERALS
+        if stype & S_4BYTE_LITERALS:
+            rflags.append("S_4BYTE_LITERALS")
+            stype &= ~S_4BYTE_LITERALS
+        if stype & S_8BYTE_LITERALS:
+            rflags.append("S_8BYTE_LITERALS")
+            stype &= ~S_8BYTE_LITERALS
+        if stype & S_LITERAL_POINTERS:
+            rflags.append("S_LITERAL_POINTERS")
+            stype &= ~S_LITERAL_POINTERS
+        if stype & S_NON_LAZY_SYMBOL_POINTERS:
+            rflags.append("S_NON_LAZY_SYMBOL_POINTERS")
+            stype &= ~S_NON_LAZY_SYMBOL_POINTERS
+        if stype & S_LAZY_SYMBOL_POINTERS:
+            rflags.append("S_LAZY_SYMBOL_POINTERS")
+            stype &= ~S_LAZY_SYMBOL_POINTERS
+        if stype & S_SYMBOL_STUBS:
+            rflags.append("S_SYMBOL_STUBS")
+            stype &= ~S_SYMBOL_STUBS
+        if stype & S_MOD_INIT_FUNC_POINTERS:
+            rflags.append("S_MOD_INIT_FUNC_POINTERS")
+            stype &= ~S_MOD_INIT_FUNC_POINTERS
+        if stype & S_MOD_TERM_FUNC_POINTERS:
+            rflags.append("S_MOD_TERM_FUNC_POINTERS")
+            stype &= ~S_MOD_TERM_FUNC_POINTERS
+        if stype & S_COALESCED:
+            rflags.append("S_COALESCED")
+            stype &= ~S_COALESCED
+        if stype & S_GB_ZEROFILL:
+            rflags.append("S_GB_ZEROFILL")
+            stype &= ~S_GB_ZEROFILL
+        if stype & S_INTERPOSING:
+            rflags.append("S_INTERPOSING")
+            stype &= ~S_INTERPOSING
+        if stype & S_16BYTE_LITERALS:
+            rflags.append("S_16BYTE_LITERALS")
+            stype &= ~S_16BYTE_LITERALS
+        if stype & S_DTRACE_DOF:
+            rflags.append("S_DTRACE_DOF")
+            stype &= ~S_DTRACE_DOF
+        if stype & S_LAZY_DYLIB_SYMBOL_POINTERS:
+            rflags.append("S_LAZY_DYLIB_SYMBOL_POINTERS")
+            stype &= ~S_LAZY_DYLIB_SYMBOL_POINTERS
+        if stype & S_THREAD_LOCAL_REGULAR:
+            rflags.append("S_THREAD_LOCAL_REGULAR")
+            stype &= ~S_THREAD_LOCAL_REGULAR
+        if stype & S_THREAD_LOCAL_ZEROFILL:
+            rflags.append("S_THREAD_LOCAL_ZEROFILL")
+            stype &= ~S_THREAD_LOCAL_ZEROFILL
+        if stype & S_THREAD_LOCAL_VARIABLES:
+            rflags.append("S_THREAD_LOCAL_VARIABLES")
+            stype &= ~S_THREAD_LOCAL_VARIABLES
+        if stype & S_THREAD_LOCAL_VARIABLE_POINTERS:
+            rflags.append("S_THREAD_LOCAL_VARIABLE_POINTERS")
+            stype &= ~S_THREAD_LOCAL_VARIABLE_POINTERS
+        if stype & S_THREAD_LOCAL_INIT_FUNCTION_POINTERS:
+            rflags.append("S_THREAD_LOCAL_INIT_FUNCTION_POINTERS")
+            stype &= ~S_THREAD_LOCAL_INIT_FUNCTION_POINTERS
+        if attributes & SECTION_ATTRIBUTES_USR:
+            rflags.append("SECTION_ATTRIBUTES_USR")
+            attributes &= ~SECTION_ATTRIBUTES_USR
+        if attributes & S_ATTR_PURE_INSTRUCTIONS:
+            rflags.append("S_ATTR_PURE_INSTRUCTIONS")
+            attributes &= ~S_ATTR_PURE_INSTRUCTIONS
+        if attributes & S_ATTR_NO_TOC:
+            rflags.append("S_ATTR_NO_TOC")
+            attributes &= ~S_ATTR_NO_TOC
+        if attributes & S_ATTR_STRIP_STATIC_SYMS:
+            rflags.append("S_ATTR_STRIP_STATIC_SYMS")
+            attributes &= ~S_ATTR_STRIP_STATIC_SYMS
+        if attributes & S_ATTR_NO_DEAD_STRIP:
+            rflags.append("S_ATTR_NO_DEAD_STRIP")
+            attributes &= ~S_ATTR_NO_DEAD_STRIP
+        if attributes & S_ATTR_LIVE_SUPPORT:
+            rflags.append("S_ATTR_LIVE_SUPPORT")
+            attributes &= ~S_ATTR_LIVE_SUPPORT
+        if attributes & S_ATTR_SELF_MODIFYING_CODE:
+            rflags.append("S_ATTR_SELF_MODIFYING_CODE")
+            attributes &= ~S_ATTR_SELF_MODIFYING_CODE
+        if attributes & S_ATTR_DEBUG:
+            rflags.append("S_ATTR_DEBUG")
+            attributes &= ~S_ATTR_DEBUG
+        if attributes & SECTION_ATTRIBUTES_SYS:
+            rflags.append("SECTION_ATTRIBUTES_SYS")
+            attributes &= ~SECTION_ATTRIBUTES_SYS
+        if attributes & S_ATTR_SOME_INSTRUCTIONS:
+            rflags.append("S_ATTR_SOME_INSTRUCTIONS")
+            attributes &= ~S_ATTR_SOME_INSTRUCTIONS
+        if attributes & S_ATTR_LOC_RELOC:
+            rflags.append("S_ATTR_LOC_RELOC")
+            attributes &= ~S_ATTR_LOC_RELOC
+        return rflags
