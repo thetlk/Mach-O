@@ -14,4 +14,3 @@ class MachOVersionMinCommand(object):
 
     def parse(self, macho_file):
         self.version, self.reserved = unpack('<II', macho_file.read(4*2))
-        print self.version
