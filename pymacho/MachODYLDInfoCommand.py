@@ -3,7 +3,7 @@
 from struct import unpack
 
 
-class MachODYLDCommand(object):
+class MachODYLDInfoCommand(object):
 
     rebase_off = 0
     rebase_size = 0
