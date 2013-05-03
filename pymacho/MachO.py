@@ -21,6 +21,7 @@ from struct import unpack
 from pymacho.MachOHeader import MachOHeader
 from pymacho.MachOSegment import MachOSegment
 from pymacho.MachODYLDInfoCommand import MachODYLDInfoCommand
+from pymacho.MachOSymtabCommand import MachOSymtabCommand
 from pymacho.Constants import *
 
 
@@ -53,8 +54,7 @@ class MachO(object):
             elif cmd == LC_DYLD_INFO_ONLY or cmd == LC_DYLD_INFO:
                 self.commands.append(MachODYLDInfoCommand(macho_file))
             elif cmd == LC_SYMTAB:
-                symoff, nsyms, stroff, strsize = unpack('<IIII', macho_file.read(4*4))
-                self.symboltable = (symoff, nsyms, stroff, strsize)
+                self.commands.append(MachOSymtabCommand(macho_file))
             else:
                 print "unknow load cmd : %x" % cmd
                 return
