@@ -24,6 +24,7 @@ from pymacho.MachODYLDInfoCommand import MachODYLDInfoCommand
 from pymacho.MachOSymtabCommand import MachOSymtabCommand
 from pymacho.MachODYSymtabCommand import MachODYSymtabCommand
 from pymacho.MachODYLinkerCommand import MachODYLinkerCommand
+from pymacho.MachOUUIDCommand import MachOUUIDCommand
 from pymacho.Constants import *
 
 
@@ -61,6 +62,8 @@ class MachO(object):
                 self.commands.append(MachODYSymtabCommand(macho_file))
             elif cmd == LC_LOAD_DYLINKER:
                 self.commands.append(MachODYLinkerCommand(macho_file))
+            elif cmd == LC_UUID:
+                self.commands.append(MachOUUIDCommand(macho_file))
             else:
                 print "unknow load cmd : %x" % cmd
                 return
