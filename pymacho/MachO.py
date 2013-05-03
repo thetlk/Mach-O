@@ -22,6 +22,7 @@ from pymacho.MachOHeader import MachOHeader
 from pymacho.MachOSegment import MachOSegment
 from pymacho.MachODYLDInfoCommand import MachODYLDInfoCommand
 from pymacho.MachOSymtabCommand import MachOSymtabCommand
+from pymacho.MachODYSymtabCommand import MachODYSymtabCommand
 from pymacho.Constants import *
 
 
@@ -55,6 +56,8 @@ class MachO(object):
                 self.commands.append(MachODYLDInfoCommand(macho_file))
             elif cmd == LC_SYMTAB:
                 self.commands.append(MachOSymtabCommand(macho_file))
+            elif cmd == LC_DYSYMTAB:
+                self.commands.append(MachODYSymtabCommand(macho_file))
             else:
                 print "unknow load cmd : %x" % cmd
                 return
