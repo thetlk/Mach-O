@@ -160,3 +160,32 @@ S_ATTR_DEBUG = 0x02000000
 SECTION_ATTRIBUTES_SYS = 0x00ffff00
 S_ATTR_SOME_INSTRUCTIONS = 0x00000400
 S_ATTR_LOC_RELOC = 0x00000100
+
+# Constants for the LC_UNIXTHREAD
+# From apple source code (/usr/include/mach/i386/thread_status.h)
+# the i386_xxxx form is kept for legacy purposes since these types
+# are externally known... eventually they should be deprecated.
+# our internal implementation has moved to the following naming convention
+#
+#   x86_xxxx32 names are used to deal with 32 bit states
+#   x86_xxxx64 names are used to deal with 64 bit states
+#   x86_xxxx   names are used to deal with either 32 or 64 bit states
+#	via a self-describing mechanism
+i386_THREAD_STATE = 0x1
+i386_FLOAT_STATE = 0x2
+i386_EXCEPTION_STATE = 0x3
+x86_THREAD_STATE32 = 0x1
+x86_FLOAT_STATE32 = 0x2
+x86_EXCEPTION_STATE32 = 0x3
+x86_THREAD_STATE64 = 0x4
+x86_FLOAT_STATE64 = 0x5
+x86_EXCEPTION_STATE64 = 0x6
+x86_THREAD_STATE = 0x7
+x86_FLOAT_STATE = 	0x8
+x86_EXCEPTION_STATE = 0x9
+x86_DEBUG_STATE32 = 0xa
+x86_DEBUG_STATE64 = 0xb
+x86_DEBUG_STATE = 0xc
+THREAD_STATE_NONE = 0xd
+x86_AVX_STATE32 = 0x10
+x86_AVX_STATE64 = 0x11

@@ -26,6 +26,7 @@ from pymacho.MachODYSymtabCommand import MachODYSymtabCommand
 from pymacho.MachODYLinkerCommand import MachODYLinkerCommand
 from pymacho.MachOUUIDCommand import MachOUUIDCommand
 from pymacho.MachOVersionMinCommand import MachOVersionMinCommand
+from pymacho.MachOThreadCommand import MachOThreadCommand
 from pymacho.Constants import *
 
 
@@ -67,6 +68,8 @@ class MachO(object):
                 self.commands.append(MachOUUIDCommand(macho_file))
             elif cmd == LC_VERSION_MIN_MACOSX:
                 self.commands.append(MachOVersionMinCommand(macho_file))
+            elif cmd == LC_UNIXTHREAD or cmd == LC_THREAD:
+                self.commands.append(MachOThreadCommand(macho_file))
             else:
                 print "unknow load cmd : %x" % cmd
                 return
