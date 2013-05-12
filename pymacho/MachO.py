@@ -70,7 +70,7 @@ class MachO(object):
                 self.commands.append(MachOUUIDCommand(macho_file))
             elif cmd == LC_VERSION_MIN_MACOSX:
                 self.commands.append(MachOVersionMinCommand(macho_file))
-            elif cmd == LC_UNIXTHREAD or cmd == LC_THREAD:
+            elif cmd in [LC_UNIXTHREAD, LC_THREAD, LC_MAIN]:
                 self.commands.append(MachOThreadCommand(macho_file))
             elif cmd in [LC_LOAD_DYLIB, LC_LOAD_WEAK_DYLIB, LC_REEXPORT_DYLIB]:
                 self.commands.append(MachOLoadDYLibCommand(macho_file))
