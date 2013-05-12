@@ -79,6 +79,5 @@ class MachO(object):
                 self.commands.append(MachOLinkeditDataCommand(macho_file))
             elif cmd == LC_RPATH:
                 self.commands.append(MachORPathCommand(macho_file))
-                return
             else:
                 raise Exception("unknow load command : 0x%x - please report it!" % cmd)
