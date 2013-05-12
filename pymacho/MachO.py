@@ -77,5 +77,4 @@ class MachO(object):
             elif cmd in [LC_CODE_SIGNATURE, LC_SEGMENT_SPLIT_INFO, LC_FUNCTION_STARTS, LC_DATA_IN_CODE]:
                 self.commands.append(MachOLinkeditDataCommand(macho_file))
             else:
-                print "unknow load cmd : %x" % cmd
-                return
+                raise Exception("unknow load command : 0x%x - please report it!" % cmd)
