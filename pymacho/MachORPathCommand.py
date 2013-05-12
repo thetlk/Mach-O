@@ -22,4 +22,3 @@ class MachORPathCommand(object):
         # get path
         extract = "<%s" % ('s'*strlen)
         self.path = "".join(char if char != "\x00" else "" for char in unpack(extract, macho_file.read(strlen)))
-        print self.path
