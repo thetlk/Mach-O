@@ -22,11 +22,12 @@ class MachOThreadCommand(object):
             self.edi, self.esi, self.ebp, self.esp = unpack('<IIII', macho_file.read(4*4))
             self.ss, self.eflags, self.eip, self.cs = unpack('<IIII', macho_file.read(4*4))
             self.ds, self.es, self.fs, self.gs = unpack('<IIII', macho_file.read(4*4))
-
-        if self.flavor == x86_THREAD_STATE64:
+        elif self.flavor == x86_THREAD_STATE64:
             self.rax, self.rbx, self.rcx, self.rdx = unpack('<QQQQ', macho_file.read(4*8))
             self.rdi, self.rsi, self.rbp, self.rsp = unpack('<QQQQ', macho_file.read(4*8))
             self.r8, self.r9, self.r10, self.r11 = unpack('<QQQQ', macho_file.read(4*8))
             self.r12, self.r13, self.r14, self.r15 = unpack('<QQQQ', macho_file.read(4*8))
             self.rip, self.rflags, self.cs, self.fs = unpack('<QQQQ', macho_file.read(4*8))
             self.gs = unpack('<Q', macho_file.read(8))[0]
+        else:
+            raise Exception("MachOThreadCommand : flavor not already supported, please report it!")
