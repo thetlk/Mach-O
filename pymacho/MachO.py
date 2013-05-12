@@ -28,6 +28,7 @@ from pymacho.MachOUUIDCommand import MachOUUIDCommand
 from pymacho.MachOVersionMinCommand import MachOVersionMinCommand
 from pymacho.MachOThreadCommand import MachOThreadCommand
 from pymacho.MachOLoadDYLibCommand import MachOLoadDYLibCommand
+from pymacho.MachOLinkeditDataCommand import MachOLinkeditDataCommand
 from pymacho.Constants import *
 
 
@@ -73,6 +74,8 @@ class MachO(object):
                 self.commands.append(MachOThreadCommand(macho_file))
             elif cmd in [LC_LOAD_DYLIB, LC_LOAD_WEAK_DYLIB, LC_REEXPORT_DYLIB]:
                 self.commands.append(MachOLoadDYLibCommand(macho_file))
+            elif cmd in [LC_CODE_SIGNATURE, LC_SEGMENT_SPLIT_INFO, LC_FUNCTION_STARTS]:
+                self.commands.append(MachOLinkeditDataCommand(macho_file))
             else:
                 print "unknow load cmd : %x" % cmd
                 return
