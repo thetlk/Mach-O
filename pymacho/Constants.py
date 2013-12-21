@@ -119,6 +119,10 @@ LC_FUNCTION_STARTS = 0x26
 LC_DYLD_ENVIRONMENT = 0x27
 LC_MAIN = (0x28 | LC_REQ_DYLD)
 LC_DATA_IN_CODE = 0x29
+LC_SOURCE_VERSION = 0x2A # source version used to build binary
+LC_DYLIB_CODE_SIGN_DRS = 0x2B # Code signing DRs copied from linked dylibs
+LC_ENCRYPTION_INFO_64 = 0x2C # 64-bit encrypted segment information
+LC_LINKER_OPTION = 0x2D # linker options in MH_OBJECT files
 
 # Constants for the flags field of the segment_command
 SG_HIGHVM = 0x1
