@@ -59,7 +59,7 @@ class MachO(object):
                 self.segments.append(MachOSegment(macho_file))
             elif cmd == LC_SEGMENT_64:
                 self.segments.append(MachOSegment(macho_file, arch=64))
-            elif cmd == LC_DYLD_INFO_ONLY or cmd == LC_DYLD_INFO:
+            elif cmd in [LC_DYLD_INFO_ONLY, LC_DYLD_INFO]:
                 self.commands.append(MachODYLDInfoCommand(macho_file))
             elif cmd == LC_SYMTAB:
                 self.commands.append(MachOSymtabCommand(macho_file))
