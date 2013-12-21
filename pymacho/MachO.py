@@ -30,6 +30,7 @@ from pymacho.MachOThreadCommand import MachOThreadCommand
 from pymacho.MachOLoadDYLibCommand import MachOLoadDYLibCommand
 from pymacho.MachOLinkeditDataCommand import MachOLinkeditDataCommand
 from pymacho.MachORPathCommand import MachORPathCommand
+from pymacho.MachOSourceVersionCommand import MachOSourceVersionCommand
 from pymacho.Constants import *
 
 
@@ -79,5 +80,7 @@ class MachO(object):
                 self.commands.append(MachOLinkeditDataCommand(macho_file))
             elif cmd == LC_RPATH:
                 self.commands.append(MachORPathCommand(macho_file))
+            elif cmd == LC_SOURCE_VERSION:
+                self.commands.append(MachOSourceVersionCommand(macho_file))
             else:
                 raise Exception("unknow load command : 0x%x - please report it!" % cmd)
