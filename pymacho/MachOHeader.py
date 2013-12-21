@@ -43,7 +43,9 @@ class MachOHeader(object):
         Parse headers from macho_file.
         """
         assert macho_file.tell() == 0
-        self.magic, self.cputype, self.cpusubtype, self.filetype = unpack("<IIII", macho_file.read(4*4))
+        self.magic = unpack('<I', macho_file.read(4))[0]
+        assert self.magic in [MH_MAGIC, MH_CIGAM, MH_MAGIC_64, MH_CIGAM_64]
+        self.cputype, self.cpusubtype, self.filetype = unpack("<III", macho_file.read(4*3))
         self.ncmds, self.sizeofcmds, self.flags = unpack('<III', macho_file.read(4*3))
         if self.is_64() is True:
             self.reserved = unpack('<I', macho_file.read(4))
