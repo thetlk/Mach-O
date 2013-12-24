@@ -67,7 +67,7 @@ class MachO(object):
                 self.commands.append(MachOSymtabCommand(macho_file))
             elif cmd == LC_DYSYMTAB:
                 self.commands.append(MachODYSymtabCommand(macho_file))
-            elif cmd == LC_LOAD_DYLINKER:
+            elif cmd in [LC_LOAD_DYLINKER, LC_DYLD_ENVIRONMENT]:
                 self.commands.append(MachODYLinkerCommand(macho_file))
             elif cmd == LC_UUID:
                 self.commands.append(MachOUUIDCommand(macho_file))
