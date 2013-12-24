@@ -79,7 +79,7 @@ class MachO(object):
                 self.commands.append(MachOMainCommand(macho_file))
             elif cmd in [LC_LOAD_DYLIB, LC_LOAD_WEAK_DYLIB, LC_REEXPORT_DYLIB]:
                 self.commands.append(MachOLoadDYLibCommand(macho_file))
-            elif cmd in [LC_CODE_SIGNATURE, LC_SEGMENT_SPLIT_INFO, LC_FUNCTION_STARTS, LC_DATA_IN_CODE]:
+            elif cmd in [LC_CODE_SIGNATURE, LC_SEGMENT_SPLIT_INFO, LC_FUNCTION_STARTS, LC_DATA_IN_CODE, LC_DYLIB_CODE_SIGN_DRS]:
                 self.commands.append(MachOLinkeditDataCommand(macho_file))
             elif cmd == LC_RPATH:
                 self.commands.append(MachORPathCommand(macho_file))
