@@ -27,6 +27,7 @@ from pymacho.MachODYLinkerCommand import MachODYLinkerCommand
 from pymacho.MachOUUIDCommand import MachOUUIDCommand
 from pymacho.MachOVersionMinCommand import MachOVersionMinCommand
 from pymacho.MachOThreadCommand import MachOThreadCommand
+from pymacho.MachOMainCommand import MachOMainCommand
 from pymacho.MachOLoadDYLibCommand import MachOLoadDYLibCommand
 from pymacho.MachOLinkeditDataCommand import MachOLinkeditDataCommand
 from pymacho.MachORPathCommand import MachORPathCommand
@@ -72,8 +73,10 @@ class MachO(object):
                 self.commands.append(MachOUUIDCommand(macho_file))
             elif cmd == LC_VERSION_MIN_MACOSX:
                 self.commands.append(MachOVersionMinCommand(macho_file))
-            elif cmd in [LC_UNIXTHREAD, LC_THREAD, LC_MAIN]:
+            elif cmd in [LC_UNIXTHREAD, LC_THREAD]:
                 self.commands.append(MachOThreadCommand(macho_file))
+            elif cmd == LC_MAIN:
+                self.commands.append(MachOMainCommand(macho_file))
             elif cmd in [LC_LOAD_DYLIB, LC_LOAD_WEAK_DYLIB, LC_REEXPORT_DYLIB]:
                 self.commands.append(MachOLoadDYLibCommand(macho_file))
             elif cmd in [LC_CODE_SIGNATURE, LC_SEGMENT_SPLIT_INFO, LC_FUNCTION_STARTS, LC_DATA_IN_CODE]:
