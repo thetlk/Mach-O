@@ -32,6 +32,7 @@ from pymacho.MachOLoadDYLibCommand import MachOLoadDYLibCommand
 from pymacho.MachOLinkeditDataCommand import MachOLinkeditDataCommand
 from pymacho.MachORPathCommand import MachORPathCommand
 from pymacho.MachOSourceVersionCommand import MachOSourceVersionCommand
+from pymacho.MachOEncryptionInfoCommand import MachOEncryptionInfoCommand
 from pymacho.Constants import *
 
 
@@ -85,5 +86,7 @@ class MachO(object):
                 self.commands.append(MachORPathCommand(macho_file))
             elif cmd == LC_SOURCE_VERSION:
                 self.commands.append(MachOSourceVersionCommand(macho_file))
+            elif cmd == LC_ENCRYPTION_INFO:
+                self.commands.append(MachOEncryptionInfoCommand(macho_file))
             else:
                 raise Exception("unknow load command : 0x%x - please report it!" % cmd)
