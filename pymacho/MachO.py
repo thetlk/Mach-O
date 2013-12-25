@@ -71,7 +71,7 @@ class MachO(object):
                 self.commands.append(MachODYLinkerCommand(macho_file))
             elif cmd == LC_UUID:
                 self.commands.append(MachOUUIDCommand(macho_file))
-            elif cmd == LC_VERSION_MIN_MACOSX:
+            elif cmd in [LC_VERSION_MIN_MACOSX, LC_VERSION_MIN_IPHONEOS]:
                 self.commands.append(MachOVersionMinCommand(macho_file))
             elif cmd in [LC_UNIXTHREAD, LC_THREAD]:
                 self.commands.append(MachOThreadCommand(macho_file))
