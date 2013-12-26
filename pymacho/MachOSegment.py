@@ -54,10 +54,6 @@ class MachOSegment(object):
         for i in range(self.nsects):
             self.sections.append(MachOSection(macho_file, arch=self.arch))
 
-    def set_flags(self, flags=[]):
-        for flag in flags:
-            self.flags += flag
-
     def display_flags(self):
         rflags = []
         flags = self.flags

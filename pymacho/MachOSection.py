@@ -42,10 +42,6 @@ class MachOSection(object):
         if macho_file is not None:
             self.parse(macho_file)
 
-    def set_flags(self, flags=[]):
-        for flag in flags:
-            self.flags += flag
-
     def parse(self, macho_file):
         self.sectname = "".join(char if char != "\x00" else "" for char in unpack("<cccccccccccccccc", macho_file.read(16)))
         self.segname = "".join(char if char != "\x00" else "" for char in unpack("<cccccccccccccccc", macho_file.read(16)))
