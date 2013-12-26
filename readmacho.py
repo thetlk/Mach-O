@@ -25,6 +25,7 @@ def main():
     parser = argparse.ArgumentParser(description="Read Mach-O file")
     parser.add_argument('filename', help='Mach-O file to parse and print')
     parser.add_argument('--headers', '-hd', help='show informations about header', action='store_true')
+    parser.add_argument('--segments', '-sg', help='display all segments', action='store_true')
     parser.add_argument('--verbose', '-v', help='display many informations', action='store_true')
     args = parser.parse_args()
     
@@ -41,6 +42,10 @@ def main():
         if m.header.is_64():
             print "\t[+] reserved : 0x%x" % (m.header.reserved)
 
+    if args.segments:
+        print "[*] Segments (%d) :" % len(m.segments)
+        for segment in m.segments:
+            segment.display(before="\t")
 
 if __name__ == '__main__':
     main()
