@@ -82,6 +82,7 @@ class MachOSegment(object):
         print before + "\t- initprot : 0x%x" % self.initprot
         print before + "\t- nsects : %d" % self.nsects
         print before + "\t- flags : 0x%x - %s" % (self.flags, ", ".join(self.display_flags()))
-        print before + "\t[*] Sections (%d) :" % self.nsects
-        for section in self.sections:
-            section.display(before=before+"\t\t")
+        if len(self.sections) != 0:
+            print before + "\t[*] Sections (%d) :" % len(self.sections)
+            for section in self.sections:
+                section.display(before=before+"\t\t")
