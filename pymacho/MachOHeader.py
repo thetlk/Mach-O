@@ -200,4 +200,6 @@ class MachOHeader(object):
         if flags & MH_NO_HEAP_EXECUTION:
             rflags.append("NO_HEAP_EXECUTION")
             flags &= ~MH_NO_HEAP_EXECUTION
+        if flags != 0:
+            raise Exception("flags is not 0 (0x%x) - some flags aren't known" % flags)
         return rflags
