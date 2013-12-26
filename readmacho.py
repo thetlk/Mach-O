@@ -34,7 +34,7 @@ def main():
         print "\t[+] magic : 0x%x %s" % (m.header.magic, "- " + m.header.display_magic() if args.verbose else "")
         print "\t[+] cputype : 0x%x %s" % (m.header.cputype, "- " + m.header.display_cputype() if args.verbose else "")
         print "\t[+] cpusubtype : 0x%s" % (m.header.cpusubtype)
-        print "\t[+] filetype : 0x%s %s" % (m.header.filetype, "- " + m.header.display_filetype() if args.verbose else "")
+        print "\t[+] filetype : 0x%x %s" % (m.header.filetype, "- " + m.header.display_filetype() if args.verbose else "")
         print "\t[+] ncmds : %d" % (m.header.ncmds)
         print "\t[+] sizeofcmds : %d byte%s" % (m.header.sizeofcmds, "s" if m.header.sizeofcmds > 1 else "")
         print "\t[+] flags : 0x%x %s" % (m.header.flags, "- " + ", ".join(m.header.display_flags()) if args.verbose else "")
