@@ -34,7 +34,7 @@ class MachOSegment(object):
     initprot = 0
     nsects = 0
     flags = 0
-    sections = []
+    sections = None
 
     def __init__(self, macho_file=None, arch=32):
         if arch != 32:
@@ -51,6 +51,7 @@ class MachOSegment(object):
             self.vmaddr, self.vmsize, self.fileoff, self.filesize = unpack('<QQQQ', macho_file.read(8*4))
 
         self.maxprot, self.initprot, self.nsects, self.flags = unpack('<IIII', macho_file.read(4*4))
+        self.sections = []
         for i in range(self.nsects):
             self.sections.append(MachOSection(macho_file, arch=self.arch))
 
