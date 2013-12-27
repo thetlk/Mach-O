@@ -63,30 +63,30 @@ class MachO(object):
             elif cmd == LC_SEGMENT_64:
                 self.segments.append(MachOSegment(macho_file, arch=64))
             elif cmd in [LC_DYLD_INFO_ONLY, LC_DYLD_INFO]:
-                self.commands.append(MachODYLDInfoCommand(macho_file))
+                self.commands.append(MachODYLDInfoCommand(macho_file, cmd))
             elif cmd == LC_SYMTAB:
-                self.commands.append(MachOSymtabCommand(macho_file))
+                self.commands.append(MachOSymtabCommand(macho_file, cmd))
             elif cmd == LC_DYSYMTAB:
-                self.commands.append(MachODYSymtabCommand(macho_file))
+                self.commands.append(MachODYSymtabCommand(macho_file, cmd))
             elif cmd in [LC_LOAD_DYLINKER, LC_DYLD_ENVIRONMENT]:
-                self.commands.append(MachODYLinkerCommand(macho_file))
+                self.commands.append(MachODYLinkerCommand(macho_file, cmd))
             elif cmd == LC_UUID:
-                self.commands.append(MachOUUIDCommand(macho_file))
+                self.commands.append(MachOUUIDCommand(macho_file, cmd))
             elif cmd in [LC_VERSION_MIN_MACOSX, LC_VERSION_MIN_IPHONEOS]:
-                self.commands.append(MachOVersionMinCommand(macho_file))
+                self.commands.append(MachOVersionMinCommand(macho_file, cmd))
             elif cmd in [LC_UNIXTHREAD, LC_THREAD]:
-                self.commands.append(MachOThreadCommand(macho_file))
+                self.commands.append(MachOThreadCommand(macho_file, cmd))
             elif cmd == LC_MAIN:
-                self.commands.append(MachOMainCommand(macho_file))
+                self.commands.append(MachOMainCommand(macho_file, cmd))
             elif cmd in [LC_LOAD_DYLIB, LC_LOAD_WEAK_DYLIB, LC_REEXPORT_DYLIB, LC_ID_DYLIB]:
-                self.commands.append(MachOLoadDYLibCommand(macho_file))
+                self.commands.append(MachOLoadDYLibCommand(macho_file, cmd))
             elif cmd in [LC_CODE_SIGNATURE, LC_SEGMENT_SPLIT_INFO, LC_FUNCTION_STARTS, LC_DATA_IN_CODE, LC_DYLIB_CODE_SIGN_DRS]:
-                self.commands.append(MachOLinkeditDataCommand(macho_file))
+                self.commands.append(MachOLinkeditDataCommand(macho_file, cmd))
             elif cmd == LC_RPATH:
-                self.commands.append(MachORPathCommand(macho_file))
+                self.commands.append(MachORPathCommand(macho_file, cmd))
             elif cmd == LC_SOURCE_VERSION:
-                self.commands.append(MachOSourceVersionCommand(macho_file))
+                self.commands.append(MachOSourceVersionCommand(macho_file, cmd))
             elif cmd == LC_ENCRYPTION_INFO:
-                self.commands.append(MachOEncryptionInfoCommand(macho_file))
+                self.commands.append(MachOEncryptionInfoCommand(macho_file, cmd))
             else:
                 raise Exception("unknow load command : 0x%x - please report it!" % cmd)

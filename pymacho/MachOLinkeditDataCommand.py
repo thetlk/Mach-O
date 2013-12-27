@@ -18,14 +18,16 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
 
 from struct import unpack
+from pymacho.MachOLoadCommand import MachOLoadCommand
 
 
-class MachOLinkeditDataCommand(object):
+class MachOLinkeditDataCommand(MachOLoadCommand):
 
     dataoff = 0
     datasize = 0
 
-    def __init__(self, macho_file=None):
+    def __init__(self, macho_file=None, cmd=0):
+        self.cmd = cmd
         if macho_file is not None:
             self.parse(macho_file)
 

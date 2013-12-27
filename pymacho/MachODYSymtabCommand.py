@@ -18,9 +18,10 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
 
 from struct import unpack
+from pymacho.MachOLoadCommand import MachOLoadCommand
 
 
-class MachODYSymtabCommand(object):
+class MachODYSymtabCommand(MachOLoadCommand):
 
     ilocalsym = 0
     nlocalsym = 0
@@ -41,7 +42,8 @@ class MachODYSymtabCommand(object):
     locreloff = 0
     nlocrel = 0
 
-    def __init__(self, macho_file=None):
+    def __init__(self, macho_file=None, cmd=0):
+        self.cmd = cmd
         if macho_file is not None:
             self.parse(macho_file)
 

@@ -17,18 +17,10 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
 
-from struct import unpack
-from pymacho.MachOLoadCommand import MachOLoadCommand
 
+class MachOLoadCommand(object):
 
-class MachOUUIDCommand(MachOLoadCommand):
+    cmd = 0
 
-    uuid = ()
-
-    def __init__(self, macho_file=None, cmd=0):
-        self.cmd = cmd
-        if macho_file is not None:
-            self.parse(macho_file)
-
-    def parse(self, macho_file):
-        self.uuid = unpack("<BBBBBBBBBBBBBBBB", macho_file.read(16))
+    def display(self, before):
+        print before + "<LoadCommand cmd=0x%x>" % self.cmd
