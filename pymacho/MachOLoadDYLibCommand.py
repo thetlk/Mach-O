@@ -18,7 +18,10 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
 
 from struct import unpack
+from datetime import datetime
 from pymacho.MachOLoadCommand import MachOLoadCommand
+from pymacho.Utils import int32_to_version
+from pymacho.Constants import *
 
 
 class MachOLoadDYLibCommand(MachOLoadCommand):
@@ -47,3 +50,22 @@ class MachOLoadDYLibCommand(MachOLoadCommand):
         strlen = cmdsize - self.name_offset
         extract = "<%s" % ('s'*strlen)
         self.name = "".join(char if char != "\x00" else "" for char in unpack(extract, macho_file.read(strlen)))
+
+    def display(self, before=''):
+        name = ''
+        if self.cmd == LC_LOAD_DYLIB:
+            name = 'LC_LOAD_DYLIB'
+        elif self.cmd == LC_LOAD_WEAK_DYLIB:
+            name = 'LC_LOAD_WEAK_DYLIB'
+        elif self.cmd == LC_REEXPORT_DYLIB:
+            name = 'LC_REEXPORT_DYLIB'
+        elif self.cmd == LC_ID_DYLIB:
+            name = 'LC_ID_DYLIB'
+        else:
+            raise Exception('FUUUUUUUUU')
+
+        print before + "[+] %s" % name
+        print before + "\t- name : %s" % self.name
+        print before + "\t- timestamp : %s" % datetime.fromtimestamp(self.timestamp).strftime('%Y-%m-%d %H:%M:%S')
+        print before + "\t- current_version : %s" % int32_to_version(self.current_version)
+        print before + "\t- compatibility_version : %s" % int32_to_version(self.compatibility_version)

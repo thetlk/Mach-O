@@ -57,3 +57,24 @@ class MachODYSymtabCommand(MachOLoadCommand):
         self.indirectsymoff, self.nindirectsyms = unpack('<II', macho_file.read(4*2))
         self.extreloff, self.nextrel = unpack('<II', macho_file.read(4*2))
         self.locreloff, self.nlocrel = unpack('<II', macho_file.read(4*2))
+
+    def display(self, before=''):
+        print before + "[+] LC_DYSYMTAB"
+        print before + "\t- ilocalsym : 0x%x" % self.ilocalsym
+        print before + "\t- nlocalsym : 0x%x" % self.nlocalsym
+        print before + "\t- iextdefsym : 0x%x" % self.iextdefsym
+        print before + "\t- nextdefsym : 0x%x" % self.nextdefsym
+        print before + "\t- iundefsym : 0x%x" % self.iundefsym
+        print before + "\t- nundefsym : 0x%x" % self.nundefsym
+        print before + "\t- tocoff : 0x%x" % self.tocoff
+        print before + "\t- ntoc : %d" % self.ntoc
+        print before + "\t- modtaboff : 0x%x" % self.modtaboff
+        print before + "\t- nmodtab : 0x%x" % self.nmodtab
+        print before + "\t- extrefsymoff : 0x%x" % self.extrefsymoff
+        print before + "\t- nextrefsym : 0x%x" % self.nextrefsym
+        print before + "\t- indirectsymoff : 0x%x" % self.indirectsymoff
+        print before + "\t- nindirectsyms : 0x%x" % self.nindirectsyms
+        print before + "\t- extreloff : 0x%x" % self.extreloff
+        print before + "\t- nextrel : 0x%x" % self.nextrel
+        print before + "\t- locreloff : 0x%x" % self.locreloff
+        print before + "\t- nlocrel : 0x%x" % self.nlocrel

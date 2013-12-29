@@ -26,6 +26,7 @@ def main():
     parser.add_argument('filename', help='Mach-O file to parse and print')
     parser.add_argument('--headers', '-hd', help='show informations about header', action='store_true')
     parser.add_argument('--segments', '-sg', help='display all segments', action='store_true')
+    parser.add_argument('--load-commands', '-lc', help='display all load commands', action='store_true')
     parser.add_argument('--verbose', '-v', help='display many informations', action='store_true')
     args = parser.parse_args()
     
@@ -46,6 +47,11 @@ def main():
         print "[*] Segments (%d) :" % len(m.segments)
         for segment in m.segments:
             segment.display(before="\t")
+
+    if args.load_commands:
+        print "[*] Load Commands (%d) :" % len(m.commands)
+        for lc in m.commands:
+            lc.display("\t")
 
 if __name__ == '__main__':
     main()

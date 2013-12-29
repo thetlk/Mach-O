@@ -19,6 +19,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 from struct import unpack
 from pymacho.MachOLoadCommand import MachOLoadCommand
+from pymacho.Constants import *
 
 
 class MachODYLinkerCommand(MachOLoadCommand):
@@ -41,3 +42,7 @@ class MachODYLinkerCommand(MachOLoadCommand):
         strlen = cmdsize - self.offset
         extract = "<%s" % ('s'*strlen)
         self.path = "".join(char if char != "\x00" else "" for char in unpack(extract, macho_file.read(strlen)))
+
+    def display(self, before=''):
+        print before + "[+] %s" % ("LC_DYLD_ENVIRONMENT" if self.cmd == LC_DYLD_ENVIRONMENT else "LC_LOAD_DYLINKER")
+        print before + "\t - path : %s" % self.path

@@ -19,12 +19,14 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 from struct import unpack
 from pymacho.MachOLoadCommand import MachOLoadCommand
+from pymacho.Utils import int32_to_version
+from pymacho.Constants import *
 
 
 class MachOVersionMinCommand(MachOLoadCommand):
 
     version = 0
-    reserved = 0
+    sdk = 0
 
     def __init__(self, macho_file=None, cmd=0):
         self.cmd = cmd
@@ -32,4 +34,9 @@ class MachOVersionMinCommand(MachOLoadCommand):
             self.parse(macho_file)
 
     def parse(self, macho_file):
-        self.version, self.reserved = unpack('<II', macho_file.read(4*2))
+        self.version, self.sdk = unpack('<II', macho_file.read(4*2))
+
+    def display(self, before=''):
+        print before + "[+] %s" % ("LC_VERSION_MIN_MACOSX" if self.cmd == LC_VERSION_MIN_MACOSX else "LC_VERSION_MIN_IPHONEOS")
+        print before + "\t- version : %s" % int32_to_version(self.version)
+        print before + "\t- sdk : %s" % int32_to_version(self.sdk)

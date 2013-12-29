@@ -50,3 +50,6 @@ class MachOThreadCommand(MachOLoadCommand):
             self.gs = unpack('<Q', macho_file.read(8))[0]
         else:
             raise Exception("MachOThreadCommand : flavor not already supported, please report it!")
+
+    def display(self, before=''):
+        print before + "[+] %s" % ("LC_THREAD" if self.cmd == LC_THREAD else "LC_UNIXTHREAD")

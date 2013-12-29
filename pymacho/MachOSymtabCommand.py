@@ -36,3 +36,10 @@ class MachOSymtabCommand(MachOLoadCommand):
     def parse(self, macho_file):
         self.symoff, self.nsyms = unpack('<II', macho_file.read(4*2))
         self.stroff, self.strsize = unpack('<II', macho_file.read(4*2))
+
+    def display(self, before=''):
+        print before + "[+] LC_SYMTAB"
+        print before + "\t- symoff : 0x%x" % self.symoff
+        print before + "\t- nsyms : %d" % self.nsyms
+        print before + "\t- stroff : 0x%x" % self.stroff
+        print before + "\t- strsize : %d (0x%x)" % (self.strsize, self.strsize)

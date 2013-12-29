@@ -17,23 +17,12 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
 
-from struct import unpack
-from pymacho.MachOLoadCommand import MachOLoadCommand
-from pymacho.Utils import int64_to_version
+def int32_to_version(version):
+    # X.Y.Z is encoded in nibbles xxxx.yy.zz
+    return "%d.%d.%d" % (version >> 16, (version >> 8)&0xff, version&0xff)
 
+def int64_to_version(version):
+    # A.B.C.D.E packed as a24.b10.c10.d10.e10
+    return "%d.%d.%d.%d.%d" % (version >> 40, (version >> 30)&0x3ff, (version>>20)&0x3ff, (version>>10)&0x3ff, version&0x3ff)
 
-class MachOSourceVersionCommand(MachOLoadCommand):
-
-    version = 0
-
-    def __init__(self, macho_file=None, cmd=0):
-        self.cmd = cmd
-        if macho_file is not None:
-            self.parse(macho_file)
-
-    def parse(self, macho_file):
-        self.version = unpack('<Q', macho_file.read(8))[0]
-
-    def display(self, before=''):
-        print before + "[+] LC_SOURCE_VERSION"
-        print before + "\t- version : %s" % int64_to_version(self.version)
+    

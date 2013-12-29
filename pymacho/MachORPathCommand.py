@@ -41,3 +41,7 @@ class MachORPathCommand(MachOLoadCommand):
         # get path
         extract = "<%s" % ('s'*strlen)
         self.path = "".join(char if char != "\x00" else "" for char in unpack(extract, macho_file.read(strlen)))
+
+    def display(self, before=''):
+        print before + "[+] LC_RPATH"
+        print before + "\t- path : %s" % self.path

@@ -34,3 +34,8 @@ class MachOMainCommand(MachOLoadCommand):
     def parse(self, macho_file):
         self.entryoff = unpack('<Q', macho_file.read(8))[0]
         self.stacksize = unpack('<Q', macho_file.read(8))[0]
+
+    def display(self, before=''):
+        print before + "[+] LC_MAIN"
+        print before + "\t- entryoff : 0x%x" % self.entryoff
+        print before + "\t- stacksize : 0x%x" % self.stacksize
