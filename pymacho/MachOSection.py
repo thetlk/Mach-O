@@ -56,6 +56,10 @@ class MachOSection(object):
 
         if self.arch == 64:
             self.reserved3 = unpack('<I', macho_file.read(4))[0]
+        before = macho_file.tell()
+        macho_file.seek(self.offset)
+        self.data = macho_file.read(self.size)
+        macho_file.seek(before)
 
     def display_flags(self):
         """
