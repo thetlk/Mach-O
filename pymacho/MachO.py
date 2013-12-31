@@ -54,6 +54,12 @@ class MachO(object):
         self.header = MachOHeader(macho_file)
         self.load_commands(macho_file)
 
+    def write_file(self, filename):
+        with open(filename, "wb") as macho_file:
+            self.header.write(macho_file)
+            for segment in self.segments:
+                segment.write(macho_file)
+
     def load_commands(self, macho_file):
         assert macho_file.tell() == 28 or macho_file.tell() == 32
         for i in range(self.header.ncmds):

@@ -31,6 +31,7 @@ def main():
     args = parser.parse_args()
     
     m = MachO(args.filename)
+
     if args.headers:
         print "[*] Headers :"
         print "\t[+] magic : 0x%x %s" % (m.header.magic, "- " + m.header.display_magic() if args.verbose else "")

@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
 
-from struct import unpack
+from struct import unpack, pack
 from pymacho.Constants import *
 
 
@@ -60,6 +60,18 @@ class MachOSection(object):
         macho_file.seek(self.offset)
         self.data = macho_file.read(self.size)
         macho_file.seek(before)
+
+    def write(self, macho_file):
+        macho_file.write(pack('<16s', self.sectname))
+        macho_file.write(pack('<16s', self.segname))
+        if self.arch == 32:
+            macho_file.write(pack('<II', self.addr, self.size))
+        else:
+            macho_file.write(pack('<QQ', self.addr, self.size))
+        macho_file.write(pack('<IIII', self.offset, self.align, self.reloff, self.nreloc))
+        macho_file.write(pack('<III', self.flags, self.reserved1, self.reserved2))
+        if self.arch == 64:
+            macho_file.write(pack('<I', self.reserved3))
 
     def display_flags(self):
         """

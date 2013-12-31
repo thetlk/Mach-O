@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
 
-from struct import unpack
+from struct import unpack, pack
 from pymacho.Constants import *
 
 
@@ -49,6 +49,13 @@ class MachOHeader(object):
         self.ncmds, self.sizeofcmds, self.flags = unpack('<III', macho_file.read(4*3))
         if self.is_64() is True:
             self.reserved = unpack('<I', macho_file.read(4))
+
+    def write(self, macho_file):
+        macho_file.seek(0)
+        macho_file.write(pack('<IIII', self.magic, self.cputype, self.cpusubtype, self.filetype))
+        macho_file.write(pack('<III', self.ncmds, self.sizeofcmds, self.flags))
+        if self.is_64():
+            macho_file.write(pack('<I', self.reserved))
 
     def is_64(self):
         """

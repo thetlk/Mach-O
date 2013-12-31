@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
 
-from struct import unpack
+from struct import unpack, pack
 from pymacho.MachOSection import MachOSection
 from pymacho.Utils import display_protection
 from pymacho.Constants import *
@@ -55,6 +55,23 @@ class MachOSegment(object):
         self.sections = []
         for i in range(self.nsects):
             self.sections.append(MachOSection(macho_file, arch=self.arch))
+
+    def write(self, macho_file):
+        before = macho_file.tell()
+        macho_file.write(pack('<I', 0x1)) # load_command
+        macho_file.write(pack('<I', 0x0)) # load_command size - initialize to 0
+        macho_file.write(pack('<16s', self.segname))
+        if self.arch == 32:
+            macho_file.write(pack('<IIII', self.vmaddr, self.vmsize, self.fileoff, self.filesize))
+        else:
+            macho_file.write(pack('<QQQQ', self.vmaddr, self.vmsize, self.fileoff, self.filesize))
+        macho_file.write(pack('<IIII', self.maxprot, self.initprot, self.nsects, self.flags))
+        for section in self.sections:
+            section.write(macho_file)
+        after = macho_file.tell()
+        macho_file.seek(before+4)
+        macho_file.write(pack('<I', after-before))
+        macho_file.seek(after)
 
     def display_flags(self):
         rflags = []
