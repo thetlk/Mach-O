@@ -48,7 +48,7 @@ class MachOHeader(object):
         self.cputype, self.cpusubtype, self.filetype = unpack("<III", macho_file.read(4*3))
         self.ncmds, self.sizeofcmds, self.flags = unpack('<III', macho_file.read(4*3))
         if self.is_64() is True:
-            self.reserved = unpack('<I', macho_file.read(4))
+            self.reserved = unpack('<I', macho_file.read(4))[0]
 
     def write(self, macho_file):
         macho_file.seek(0)

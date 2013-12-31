@@ -58,7 +58,7 @@ class MachOSegment(object):
 
     def write(self, macho_file):
         before = macho_file.tell()
-        macho_file.write(pack('<I', 0x1)) # load_command
+        macho_file.write(pack('<I', 0x1 if self.arch == 32 else 0x19)) # load_command
         macho_file.write(pack('<I', 0x0)) # load_command size - initialize to 0
         macho_file.write(pack('<16s', self.segname))
         if self.arch == 32:
