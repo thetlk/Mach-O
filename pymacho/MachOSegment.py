@@ -19,6 +19,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 from struct import unpack
 from pymacho.MachOSection import MachOSection
+from pymacho.Utils import display_protection
 from pymacho.Constants import *
 
 
@@ -78,8 +79,8 @@ class MachOSegment(object):
         print before + "\t- vmsize : 0x%x" % self.vmsize
         print before + "\t- fileoff : 0x%x" % self.fileoff
         print before + "\t- filesize : 0x%x" % self.filesize
-        print before + "\t- maxprot : 0x%x" % self.maxprot
-        print before + "\t- initprot : 0x%x" % self.initprot
+        print before + "\t- maxprot : 0x%x (%s)" % (self.maxprot, display_protection(self.maxprot))
+        print before + "\t- initprot : 0x%x (%s)" % (self.initprot, display_protection(self.initprot))
         print before + "\t- nsects : %d" % self.nsects
         print before + "\t- flags : 0x%x - %s" % (self.flags, ", ".join(self.display_flags()))
         if len(self.sections) != 0:

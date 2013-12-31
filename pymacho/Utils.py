@@ -25,4 +25,6 @@ def int64_to_version(version):
     # A.B.C.D.E packed as a24.b10.c10.d10.e10
     return "%d.%d.%d.%d.%d" % (version >> 40, (version >> 30)&0x3ff, (version>>20)&0x3ff, (version>>10)&0x3ff, version&0x3ff)
 
+def display_protection(prot):
+    return "%s%s%s" % ("r" if (prot>>2)&0x1 == 1 else "-", "w" if (prot>>1)&0x1 == 1 else "-", "x" if prot&0x1 == 1 else "-")
     
