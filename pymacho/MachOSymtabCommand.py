@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
 
-from struct import unpack
+from struct import unpack, pack
 from pymacho.MachOLoadCommand import MachOLoadCommand
 
 
@@ -36,6 +36,26 @@ class MachOSymtabCommand(MachOLoadCommand):
     def parse(self, macho_file):
         self.symoff, self.nsyms = unpack('<II', macho_file.read(4*2))
         self.stroff, self.strsize = unpack('<II', macho_file.read(4*2))
+        before = macho_file.tell()
+        macho_file.seek(self.symoff)
+        self.sym = macho_file.read(self.nsyms*3*4)
+        macho_file.seek(self.stroff)
+        self.str = macho_file.read(self.strsize)
+        macho_file.seek(before)
+
+    def write(self, macho_file):
+        before = macho_file.tell()
+        macho_file.write(pack('<I', self.cmd))
+        macho_file.write(pack('<I', 0x0)) # cmdsize
+        macho_file.write(pack('<IIII', self.symoff, self.nsyms, self.stroff, self.strsize))
+        after = macho_file.tell()
+        macho_file.seek(self.symoff)
+        macho_file.write(self.sym)
+        macho_file.seek(self.stroff)
+        macho_file.write(self.str)
+        macho_file.seek(before+4)
+        macho_file.write(pack('<I', after-before))
+        macho_file.seek(after)
 
     def display(self, before=''):
         print before + "[+] LC_SYMTAB"

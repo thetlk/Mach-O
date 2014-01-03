@@ -36,6 +36,15 @@ class MachOEncryptionInfoCommand(MachOLoadCommand):
         self.cryptoff, self.cryptsize = unpack('<II', macho_file.read(4*2))
         self.cryptid = unpack('<I', macho_file.read(4))[0]
 
+    def write(self, macho_file):
+        before = macho_file.tell()
+        macho_file.write(pack('<II', self.cmd, 0x0))
+        macho_file.write(pack('<III', self.cryptoff, self.cryptsize, self.cryptid))
+        after = macho_file.tell()
+        macho_file.seek(before+4)
+        macho_file.write(pack('<I', after-before))
+        macho_file.seek(after)
+
     def display(self, before=''):
         print before + "[+] LC_ENCRYPTION_INFO"
         print before + "\t- cryptoff : 0x%x" % self.cryptoff

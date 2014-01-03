@@ -19,6 +19,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 from struct import unpack, pack
 from pymacho.Constants import *
+from pymacho.MachORelocationInfo import MachORelocationInfo
 
 
 class MachOSection(object):
@@ -57,8 +58,14 @@ class MachOSection(object):
         if self.arch == 64:
             self.reserved3 = unpack('<I', macho_file.read(4))[0]
         before = macho_file.tell()
+        # get data
         macho_file.seek(self.offset)
         self.data = macho_file.read(self.size)
+        # go to relocation offset
+        macho_file.seek(self.reloff)
+        self.relocs = []
+        for i in range(self.nreloc):
+            self.relocs.append(MachORelocationInfo(macho_file))
         macho_file.seek(before)
 
     def write(self, macho_file):
@@ -72,6 +79,14 @@ class MachOSection(object):
         macho_file.write(pack('<III', self.flags, self.reserved1, self.reserved2))
         if self.arch == 64:
             macho_file.write(pack('<I', self.reserved3))
+        # now write data and reloc
+        before = macho_file.tell()
+        macho_file.seek(self.offset)
+        macho_file.write(self.data)
+        macho_file.seek(self.reloff)
+        for reloc in self.relocs:
+            reloc.write(macho_file)
+        macho_file.seek(before)
 
     def display_flags(self):
         """

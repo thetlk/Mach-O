@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
 
-from struct import unpack
+from struct import unpack, pack
 from pymacho.MachOLoadCommand import MachOLoadCommand
 from pymacho.Constants import *
 
@@ -33,15 +33,25 @@ class MachODYLinkerCommand(MachOLoadCommand):
             self.parse(macho_file)
 
     def parse(self, macho_file):
-        # get the cmdsize
         macho_file.seek(-4, 1)
         cmdsize = unpack('<I', macho_file.read(4))[0]
         # get the offset
         self.offset = unpack('<I', macho_file.read(4))[0]
         # get the string
-        strlen = cmdsize - self.offset
+        strlen = (cmdsize - self.offset)
         extract = "<%s" % ('s'*strlen)
         self.path = "".join(char if char != "\x00" else "" for char in unpack(extract, macho_file.read(strlen)))
+
+    def write(self, macho_file):
+        before = macho_file.tell()
+        macho_file.write(pack('<II', self.cmd, 0x0))
+        macho_file.write(pack('<I', self.offset))
+        len_to_write = len(self.path) + (4-len(self.path)%4)
+        macho_file.write(pack("<"+str(len_to_write)+"s", self.path.ljust(len_to_write, "\x00")))
+        after = macho_file.tell()
+        macho_file.seek(before+4)
+        macho_file.write(pack('<I', after-before))
+        macho_file.seek(after)
 
     def display(self, before=''):
         print before + "[+] %s" % ("LC_DYLD_ENVIRONMENT" if self.cmd == LC_DYLD_ENVIRONMENT else "LC_LOAD_DYLINKER")

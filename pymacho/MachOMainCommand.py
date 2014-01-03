@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
 
-from struct import unpack
+from struct import unpack, pack
 from pymacho.MachOLoadCommand import MachOLoadCommand
 
 
@@ -34,6 +34,15 @@ class MachOMainCommand(MachOLoadCommand):
     def parse(self, macho_file):
         self.entryoff = unpack('<Q', macho_file.read(8))[0]
         self.stacksize = unpack('<Q', macho_file.read(8))[0]
+
+    def write(self, macho_file):
+        before = macho_file.tell()
+        macho_file.write(pack('<II', self.cmd, 0x0))
+        macho_file.write(pack('<QQ', self.entryoff, self.stacksize))
+        after = macho_file.tell()
+        macho_file.seek(before+4)
+        macho_file.write(pack('<I', after-before))
+        macho_file.seek(after)
 
     def display(self, before=''):
         print before + "[+] LC_MAIN"

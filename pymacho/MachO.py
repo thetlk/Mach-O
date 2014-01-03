@@ -59,6 +59,8 @@ class MachO(object):
             self.header.write(macho_file)
             for segment in self.segments:
                 segment.write(macho_file)
+            for command in self.commands:
+                command.write(macho_file)
 
     def load_commands(self, macho_file):
         assert macho_file.tell() == 28 or macho_file.tell() == 32

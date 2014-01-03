@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
 
-from struct import unpack
+from struct import unpack, pack
 from pymacho.MachOLoadCommand import MachOLoadCommand
 
 
@@ -32,6 +32,17 @@ class MachOUUIDCommand(MachOLoadCommand):
 
     def parse(self, macho_file):
         self.uuid = unpack("<BBBBBBBBBBBBBBBB", macho_file.read(16))
+
+    def write(self, macho_file):
+        before = macho_file.tell()
+        macho_file.write(pack('<II', self.cmd, 0x0))
+        macho_file.write(pack('<BBBBBBBBBBBBBBBB', self.uuid[0], self.uuid[1], self.uuid[2], self.uuid[3], self.uuid[4], self.uuid[5], self.uuid[6], \
+            self.uuid[7], self.uuid[8], self.uuid[9], self.uuid[10], self.uuid[11], self.uuid[12], \
+            self.uuid[13], self.uuid[14], self.uuid[15]))
+        after = macho_file.tell()
+        macho_file.seek(before+4)
+        macho_file.write(pack('<I', after-before))
+        macho_file.seek(after)
 
     def display(self, before=''):
         print before + "[+] LC_UUID"

@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
 
-from struct import unpack
+from struct import unpack, pack
 from pymacho.MachOLoadCommand import MachOLoadCommand
 from pymacho.Constants import *
 
@@ -44,6 +44,18 @@ class MachODYLDInfoCommand(MachOLoadCommand):
         self.rebase_off, self.rebase_size, self.bind_off, self.bind_size = unpack('<IIII', macho_file.read(4*4))
         self.weak_bind_off, self.weak_bind_size, self.lazy_bind_off, self.lazy_bind_size = unpack('<IIII', macho_file.read(4*4))
         self.export_off, self.export_size = unpack('<II', macho_file.read(2*4))
+
+    def write(self, macho_file):
+        before = macho_file.tell()
+        macho_file.write(pack('<I', self.cmd))
+        macho_file.write(pack('<I', 0x0)) # cmdsize
+        macho_file.write(pack('<IIII', self.rebase_off, self.rebase_size, self.bind_off, self.bind_size))
+        macho_file.write(pack('<IIII', self.weak_bind_off, self.weak_bind_size, self.lazy_bind_off, self.lazy_bind_size))
+        macho_file.write(pack('<II', self.export_off, self.export_size))
+        after = macho_file.tell()
+        macho_file.seek(before+4)
+        macho_file.write(pack('<I', after-before))
+        macho_file.seek(after)
 
     def display(self, before=''):
         print before + "[+] %s" % ("LC_DYLD_INFO_ONLY" if self.cmd == LC_DYLD_INFO_ONLY else "LC_DYLD_INFO")

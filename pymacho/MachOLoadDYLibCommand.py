@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
 
-from struct import unpack
+from struct import unpack, pack
 from datetime import datetime
 from pymacho.MachOLoadCommand import MachOLoadCommand
 from pymacho.Utils import int32_to_version
@@ -50,6 +50,20 @@ class MachOLoadDYLibCommand(MachOLoadCommand):
         strlen = cmdsize - self.name_offset
         extract = "<%s" % ('s'*strlen)
         self.name = "".join(char if char != "\x00" else "" for char in unpack(extract, macho_file.read(strlen)))
+
+    def write(self, macho_file):
+        before = macho_file.tell()
+        macho_file.write(pack('<II', self.cmd, 0x0))
+        macho_file.write(pack('<I', self.name_offset))
+        macho_file.write(pack('<I', self.timestamp))
+        macho_file.write(pack('<I', self.current_version))
+        macho_file.write(pack('<I', self.compatibility_version))
+        len_to_write = len(self.name) + (4-len(self.name)%4)
+        macho_file.write(pack("<"+str(len_to_write)+"s", self.name.ljust(len_to_write, "\x00")))
+        after = macho_file.tell()
+        macho_file.seek(before+4)
+        macho_file.write(pack('<I', after-before))
+        macho_file.seek(after)
 
     def display(self, before=''):
         name = ''

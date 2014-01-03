@@ -18,31 +18,35 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
 
 from struct import unpack, pack
-from pymacho.MachOLoadCommand import MachOLoadCommand
-from pymacho.Utils import int64_to_version
 
 
-class MachOSourceVersionCommand(MachOLoadCommand):
+class MachORelocationInfo(object):
 
-    version = 0
+    r_adrdess = 0
+    uint32 = 0
 
-    def __init__(self, macho_file=None, cmd=0):
-        self.cmd = cmd
+    """
+    struct relocation_info {
+       int32_t	r_address;	/* offset in the section to what is being
+    				   relocated */
+       uint32_t     r_symbolnum:24,	/* symbol index if r_extern == 1 or section
+    				   ordinal if r_extern == 0 */
+    		r_pcrel:1, 	/* was relocated pc relative already */
+    		r_length:2,	/* 0=byte, 1=word, 2=long, 3=quad */
+    		r_extern:1,	/* does not include value of sym referenced */
+    		r_type:4;	/* if not 0, machine specific relocation type */
+    };
+    """
+
+    def __init__(self, macho_file=None):
         if macho_file is not None:
             self.parse(macho_file)
 
     def parse(self, macho_file):
-        self.version = unpack('<Q', macho_file.read(8))[0]
+        self.r_address, self.uint32 = unpack('<II', macho_file.read(4*2))
 
     def write(self, macho_file):
-        before = macho_file.tell()
-        macho_file.write(pack('<II', self.cmd, 0x0))
-        macho_file.write(pack('<Q', self.version))
-        after = macho_file.tell()
-        macho_file.seek(before+4)
-        macho_file.write(pack('<I', after-before))
-        macho_file.seek(after)
+        macho_file.write(pack('<II', self.r_address, self.uint32))
 
-    def display(self, before=''):
-        print before + "[+] LC_SOURCE_VERSION"
-        print before + "\t- version : %s" % int64_to_version(self.version)
+    def display(self, before):
+        print before + "<MachORelocationInfo>"

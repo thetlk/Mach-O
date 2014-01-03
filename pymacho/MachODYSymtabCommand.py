@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
 
-from struct import unpack
+from struct import unpack, pack
 from pymacho.MachOLoadCommand import MachOLoadCommand
 
 
@@ -57,6 +57,23 @@ class MachODYSymtabCommand(MachOLoadCommand):
         self.indirectsymoff, self.nindirectsyms = unpack('<II', macho_file.read(4*2))
         self.extreloff, self.nextrel = unpack('<II', macho_file.read(4*2))
         self.locreloff, self.nlocrel = unpack('<II', macho_file.read(4*2))
+
+    def write(self, macho_file):
+        before = macho_file.tell()
+        macho_file.write(pack('<II', self.cmd, 0x0))
+        macho_file.write(pack('<II', self.ilocalsym, self.nlocalsym))
+        macho_file.write(pack('<II', self.iextdefsym, self.nextdefsym))
+        macho_file.write(pack('<II', self.iundefsym, self.nundefsym))
+        macho_file.write(pack('<II', self.tocoff, self.ntoc))
+        macho_file.write(pack('<II', self.modtaboff, self.nmodtab))
+        macho_file.write(pack('<II', self.extrefsymoff, self.nextrefsym))
+        macho_file.write(pack('<II', self.indirectsymoff, self.nindirectsyms))
+        macho_file.write(pack('<II', self.extreloff, self.nextrel))
+        macho_file.write(pack('<II', self.locreloff, self.nlocrel))
+        after = macho_file.tell()
+        macho_file.seek(before+4)
+        macho_file.write(pack('<I', after-before))
+        macho_file.seek(after)
 
     def display(self, before=''):
         print before + "[+] LC_DYSYMTAB"
