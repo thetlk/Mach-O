@@ -28,17 +28,25 @@ class MachONList(object):
     n_desc = 0
     n_value = 0
 
-    def __init__(self, macho_file=None):
+    def __init__(self, macho_file=None, is_64=False):
+        self.is_64 = is_64
         if macho_file is not None:
             self.parse(macho_file)
 
     def parse(self, macho_file):
         self.n_strx = unpack('<I', macho_file.read(4))[0]
         self.n_type, self.n_sect, self.n_desc = unpack('<BBH', macho_file.read(4))
-        self.n_value = unpack('<I', macho_file.read(4))[0]
+        if self.is_64 is False:
+            self.n_value = unpack('<I', macho_file.read(4))[0]
+        else:
+            self.n_value = unpack('<Q', macho_file.read(8))[0]
 
     def write(self, macho_file):
-        macho_file.write(pack('<IBBHI', self.n_strx, self.n_type, self.n_sect, self.n_desc, self.n_value))
+        macho_file.write(pack('<IBBH', self.n_strx, self.n_type, self.n_sect, self.n_desc))
+        if self.is_64 is True:
+            macho_file.write(pack('<Q', self.n_value))
+        else:
+            macho_file.write(pack('<I', self.n_value))
 
     def display(self, before=''):
         print before + "[+] NList item :"

@@ -73,11 +73,11 @@ class MachO(object):
             elif cmd in [LC_DYLD_INFO_ONLY, LC_DYLD_INFO]:
                 self.commands.append(MachODYLDInfoCommand(macho_file, cmd))
             elif cmd == LC_SYMTAB:
-                self.commands.append(MachOSymtabCommand(macho_file, cmd))
+                self.commands.append(MachOSymtabCommand(macho_file, cmd, is_64=self.header.is_64()))
             elif cmd == LC_DYSYMTAB:
                 self.commands.append(MachODYSymtabCommand(macho_file, cmd))
             elif cmd in [LC_LOAD_DYLINKER, LC_DYLD_ENVIRONMENT]:
-                self.commands.append(MachODYLinkerCommand(macho_file, cmd))
+                self.commands.append(MachODYLinkerCommand(macho_file, cmd, is_64=self.header.is_64()))
             elif cmd == LC_UUID:
                 self.commands.append(MachOUUIDCommand(macho_file, cmd))
             elif cmd in [LC_VERSION_MIN_MACOSX, LC_VERSION_MIN_IPHONEOS]:

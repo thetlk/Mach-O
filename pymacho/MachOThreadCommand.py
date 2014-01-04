@@ -60,6 +60,15 @@ class MachOThreadCommand(MachOLoadCommand):
             macho_file.write(pack('<IIII', self.edi, self.esi, self.ebp, self.esp))
             macho_file.write(pack('<IIII', self.ss, self.eflags, self.eip, self.cs))
             macho_file.write(pack('<IIII', self.ds, self.es, self.fs, self.gs))
+        elif self.flavor == x86_THREAD_STATE64:
+            macho_file.write(pack('<QQQQ', self.rax, self.rbx, self.rcx, self.rdx))
+            macho_file.write(pack('<QQQQ', self.rdi, self.rsi, self.rbp, self.rsp))
+            macho_file.write(pack('<QQQQ', self.r8, self.r9, self.r10, self.r11))
+            macho_file.write(pack('<QQQQ', self.r12, self.r13, self.r14, self.r15))
+            macho_file.write(pack('<QQQQ', self.rip, self.rflags, self.cs, self.fs))
+            macho_file.write(pack('<Q', self.gs))
+        else:
+            raise Exception("MachOThreadCommand : flavor not already supported, please report it! (0x%x)" % self.flavor)
         after = macho_file.tell()
         macho_file.seek(before+4)
         macho_file.write(pack('<I', after-before))

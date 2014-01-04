@@ -49,7 +49,7 @@ class MachOLoadDYLibCommand(MachOLoadCommand):
         # get string
         strlen = cmdsize - self.name_offset
         extract = "<%s" % ('s'*strlen)
-        self.name = "".join(char if char != "\x00" else "" for char in unpack(extract, macho_file.read(strlen)))
+        self.name = "".join(unpack(extract, macho_file.read(strlen)))
 
     def write(self, macho_file):
         before = macho_file.tell()
@@ -58,8 +58,8 @@ class MachOLoadDYLibCommand(MachOLoadCommand):
         macho_file.write(pack('<I', self.timestamp))
         macho_file.write(pack('<I', self.current_version))
         macho_file.write(pack('<I', self.compatibility_version))
-        len_to_write = len(self.name) + (4-len(self.name)%4)
-        macho_file.write(pack("<"+str(len_to_write)+"s", self.name.ljust(len_to_write, "\x00")))
+        extract = "<"+str(len(self.name))+"s"
+        macho_file.write(pack(extract, self.name))
         after = macho_file.tell()
         macho_file.seek(before+4)
         macho_file.write(pack('<I', after-before))

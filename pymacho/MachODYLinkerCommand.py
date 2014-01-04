@@ -27,8 +27,12 @@ class MachODYLinkerCommand(MachOLoadCommand):
     offset = 0
     path = ""
 
-    def __init__(self, macho_file=None, cmd=0):
+    def __init__(self, macho_file=None, cmd=0, is_64=False):
         self.cmd = cmd
+        if is_64 is True:
+            self.align = 0x8
+        else:
+            self.align = 0x4
         if macho_file is not None:
             self.parse(macho_file)
 
@@ -40,14 +44,14 @@ class MachODYLinkerCommand(MachOLoadCommand):
         # get the string
         strlen = (cmdsize - self.offset)
         extract = "<%s" % ('s'*strlen)
-        self.path = "".join(char if char != "\x00" else "" for char in unpack(extract, macho_file.read(strlen)))
+        self.path = "".join(unpack(extract, macho_file.read(strlen)))
 
     def write(self, macho_file):
         before = macho_file.tell()
         macho_file.write(pack('<II', self.cmd, 0x0))
         macho_file.write(pack('<I', self.offset))
-        len_to_write = len(self.path) + (4-len(self.path)%4)
-        macho_file.write(pack("<"+str(len_to_write)+"s", self.path.ljust(len_to_write, "\x00")))
+        extract = "<" + str(len(self.path)) + "s"
+        macho_file.write(pack(extract, self.path))
         after = macho_file.tell()
         macho_file.seek(before+4)
         macho_file.write(pack('<I', after-before))

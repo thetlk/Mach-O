@@ -31,10 +31,11 @@ class MachOSymtabCommand(MachOLoadCommand):
     syms = None
     strs = None
 
-    def __init__(self, macho_file=None, cmd=0):
+    def __init__(self, macho_file=None, cmd=0, is_64=False):
         self.cmd = cmd
         self.syms = []
         self.strs = []
+        self.is_64 = is_64
         if macho_file is not None:
             self.parse(macho_file)
 
@@ -45,7 +46,7 @@ class MachOSymtabCommand(MachOLoadCommand):
         # parse symoff
         macho_file.seek(self.symoff)
         for i in range(self.nsyms):
-            self.syms.append(MachONList(macho_file))
+            self.syms.append(MachONList(macho_file, self.is_64))
         # parse strings
         macho_file.seek(self.stroff)
         chaines = unpack('<'+str(self.strsize)+'s', macho_file.read(self.strsize))[0]
