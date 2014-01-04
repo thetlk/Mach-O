@@ -19,6 +19,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 from struct import unpack, pack
 from pymacho.MachOLoadCommand import MachOLoadCommand
+from pymacho.MachONList import MachONList
 
 
 class MachOSymtabCommand(MachOLoadCommand):
@@ -27,9 +28,13 @@ class MachOSymtabCommand(MachOLoadCommand):
     nsyms = 0
     stroff = 0
     strsize = 0
+    syms = None
+    strs = None
 
     def __init__(self, macho_file=None, cmd=0):
         self.cmd = cmd
+        self.syms = []
+        self.strs = []
         if macho_file is not None:
             self.parse(macho_file)
 
@@ -37,10 +42,15 @@ class MachOSymtabCommand(MachOLoadCommand):
         self.symoff, self.nsyms = unpack('<II', macho_file.read(4*2))
         self.stroff, self.strsize = unpack('<II', macho_file.read(4*2))
         before = macho_file.tell()
+        # parse symoff
         macho_file.seek(self.symoff)
-        self.sym = macho_file.read(self.nsyms*3*4)
+        for i in range(self.nsyms):
+            self.syms.append(MachONList(macho_file))
+        # parse strings
         macho_file.seek(self.stroff)
-        self.str = macho_file.read(self.strsize)
+        chaines = unpack('<'+str(self.strsize)+'s', macho_file.read(self.strsize))[0]
+        for chaine in chaines.split("\x00"):
+                self.strs.append(chaine)
         macho_file.seek(before)
 
     def write(self, macho_file):
@@ -50,9 +60,9 @@ class MachOSymtabCommand(MachOLoadCommand):
         macho_file.write(pack('<IIII', self.symoff, self.nsyms, self.stroff, self.strsize))
         after = macho_file.tell()
         macho_file.seek(self.symoff)
-        macho_file.write(self.sym)
-        macho_file.seek(self.stroff)
-        macho_file.write(self.str)
+        for sym in self.syms:
+            sym.write(macho_file)
+        macho_file.write("\x00".join(self.strs))
         macho_file.seek(before+4)
         macho_file.write(pack('<I', after-before))
         macho_file.seek(after)
@@ -61,5 +71,8 @@ class MachOSymtabCommand(MachOLoadCommand):
         print before + "[+] LC_SYMTAB"
         print before + "\t- symoff : 0x%x" % self.symoff
         print before + "\t- nsyms : %d" % self.nsyms
+        for sym in self.syms:
+            sym.display(before=before+"\t")
         print before + "\t- stroff : 0x%x" % self.stroff
         print before + "\t- strsize : %d (0x%x)" % (self.strsize, self.strsize)
+        print before + "\t- strings : "+str(self.strs)

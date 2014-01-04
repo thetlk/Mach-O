@@ -14,5 +14,5 @@ Small script to write or overwrite Mach-O header, sections, and others.
 
 ## TODO
 - Finish MachOThreadCommand display and writing
-- Add proper object for symoff & stroff data
-- Improve writing - some bugs are present
+- Improve writing of macho file - some bugs are present
+- Add colorz!
