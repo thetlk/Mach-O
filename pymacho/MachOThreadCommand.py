@@ -49,7 +49,19 @@ class MachOThreadCommand(MachOLoadCommand):
             self.rip, self.rflags, self.cs, self.fs = unpack('<QQQQ', macho_file.read(4*8))
             self.gs = unpack('<Q', macho_file.read(8))[0]
         else:
-            raise Exception("MachOThreadCommand : flavor not already supported, please report it!")
+            raise Exception("MachOThreadCommand : flavor not already supported, please report it! (0x%x)" % self.flavor)
 
     def display(self, before=''):
         print before + "[+] %s" % ("LC_THREAD" if self.cmd == LC_THREAD else "LC_UNIXTHREAD")
+        if self.flavor == x86_THREAD_STATE32:
+            print before + "\teax = 0x%08x\tebx = 0x%08x\tecx = 0x%08x\tedx = 0x%08x" % (self.eax, self.ebx, self.ecx, self.edx)
+            print before + "\tedi = 0x%08x\tesi = 0x%08x\tebp = 0x%08x\tesp = 0x%08x" % (self.edi, self.esi, self.ebp, self.esp)
+            print before + "\tss = 0x%08x\t\teflags = 0x%08x\teip = 0x%08x\tcs = 0x%08x" % (self.ss, self.eflags, self.eip, self.cs)
+            print before + "\tds = 0x%08x\t\tes = 0x%08x\t\tfs = 0x%08x\t\tgs = 0x%08x" % (self.ds, self.es, self.fs, self.gs)
+        elif self.flavor == x86_THREAD_STATE64:
+            print before + "\trax = 0x%016x\trbx = 0x%016x\trcx = 0x%016x\trdx = 0x%016x" % (self.rax, self.rbx, self.rcx, self.rdx)
+            print before + "\trdi = 0x%016x\trsi = 0x%016x\trbp = 0x%016x\trsp = 0x%016x" % (self.rdi, self.rsi, self.rbp, self.rsp)
+            print before + "\t r8 = 0x%016x\t r9 = 0x%016x\tr10 = 0x%016x\tr11 = 0x%016x" % (self.r8, self.r9, self.r10, self.r11)
+            print before + "\tr12 = 0x%016x\tr13 = 0x%016x\tr14 = 0x%016x\tr15 = 0x%016x" % (self.r12, self.r13, self.r14, self.r15)
+            print before + "\trip = 0x%016x\trflags = 0x%016x\t cs = 0x%016x\t fs = 0x%016x" % (self.rip, self.rflags, self.cs, self.fs)
+            print before + "\t gs = 0x%016x" % self.gs
