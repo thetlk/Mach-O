@@ -34,12 +34,18 @@ class MachOLinkeditDataCommand(MachOLoadCommand):
 
     def parse(self, macho_file):
         self.dataoff, self.datasize = unpack('<II', macho_file.read(4*2))
+        before = macho_file.tell()
+        macho_file.seek(self.dataoff)
+        self.data = macho_file.read(self.datasize)
+        macho_file.seek(before)
 
     def write(self, macho_file):
         before = macho_file.tell()
         macho_file.write(pack('<II', self.cmd, 0x0))
         macho_file.write(pack('<II', self.dataoff, self.datasize))
         after = macho_file.tell()
+        macho_file.seek(self.dataoff)
+        macho_file.write(self.data)
         macho_file.seek(before+4)
         macho_file.write(pack('<I', after-before))
         macho_file.seek(after)

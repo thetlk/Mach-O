@@ -55,6 +55,11 @@ class MachOSegment(object):
         self.sections = []
         for i in range(self.nsects):
             self.sections.append(MachOSection(macho_file, arch=self.arch))
+        if self.nsects == 0:
+            before = macho_file.tell()
+            macho_file.seek(self.fileoff)
+            self.data = macho_file.read(self.filesize)
+            macho_file.seek(before)
 
     def write(self, macho_file):
         before = macho_file.tell()
@@ -69,6 +74,9 @@ class MachOSegment(object):
         for section in self.sections:
             section.write(macho_file)
         after = macho_file.tell()
+        if self.nsects == 0:
+            macho_file.seek(self.fileoff)
+            macho_file.write(self.data)
         macho_file.seek(before+4)
         macho_file.write(pack('<I', after-before))
         macho_file.seek(after)

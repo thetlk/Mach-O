@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
 
-from struct import unpack
+from struct import unpack, pack
 from pymacho.Constants import *
 from pymacho.MachOLoadCommand import MachOLoadCommand
 
@@ -50,6 +50,20 @@ class MachOThreadCommand(MachOLoadCommand):
             self.gs = unpack('<Q', macho_file.read(8))[0]
         else:
             raise Exception("MachOThreadCommand : flavor not already supported, please report it! (0x%x)" % self.flavor)
+
+    def write(self, macho_file):
+        before = macho_file.tell()
+        macho_file.write(pack('<II', self.cmd, 0x0))
+        macho_file.write(pack('<II', self.flavor, self.count))
+        if self.flavor == x86_THREAD_STATE32:
+            macho_file.write(pack('<IIII', self.eax, self.ebx, self.ecx, self.edx))
+            macho_file.write(pack('<IIII', self.edi, self.esi, self.ebp, self.esp))
+            macho_file.write(pack('<IIII', self.ss, self.eflags, self.eip, self.cs))
+            macho_file.write(pack('<IIII', self.ds, self.es, self.fs, self.gs))
+        after = macho_file.tell()
+        macho_file.seek(before+4)
+        macho_file.write(pack('<I', after-before))
+        macho_file.seek(after)
 
     def display(self, before=''):
         print before + "[+] %s" % ("LC_THREAD" if self.cmd == LC_THREAD else "LC_UNIXTHREAD")

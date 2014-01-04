@@ -62,6 +62,7 @@ class MachOSymtabCommand(MachOLoadCommand):
         macho_file.seek(self.symoff)
         for sym in self.syms:
             sym.write(macho_file)
+        macho_file.seek(self.stroff)
         macho_file.write("\x00".join(self.strs))
         macho_file.seek(before+4)
         macho_file.write(pack('<I', after-before))

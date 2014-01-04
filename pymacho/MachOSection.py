@@ -82,7 +82,8 @@ class MachOSection(object):
         # now write data and reloc
         before = macho_file.tell()
         macho_file.seek(self.offset)
-        macho_file.write(self.data)
+        add = "\x90" * (self.align - self.size%self.align) if self.align != 0 and self.sectname == "__text" else ""
+        macho_file.write(self.data + add) # must be align to self.align
         macho_file.seek(self.reloff)
         for reloc in self.relocs:
             reloc.write(macho_file)
