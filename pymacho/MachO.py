@@ -41,11 +41,14 @@ class MachO(object):
     Represent a Mach-O file
     """
 
-    header = MachOHeader()
-    segments = []
-    commands = []
+    header = None
+    segments = None
+    commands = None
 
     def __init__(self, filename=None):
+        self.header = MachOHeader()
+        self.segments = []
+        self.commands = []
         if filename is not None:
             with open(filename, "rb") as macho_file:
                 self.load_file(macho_file)
