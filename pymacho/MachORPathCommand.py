@@ -19,6 +19,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 from struct import unpack
 from pymacho.MachOLoadCommand import MachOLoadCommand
+from pymacho.Utils import green
 
 
 class MachORPathCommand(MachOLoadCommand):
@@ -43,5 +44,5 @@ class MachORPathCommand(MachOLoadCommand):
         self.path = "".join(char if char != "\x00" else "" for char in unpack(extract, macho_file.read(strlen)))
 
     def display(self, before=''):
-        print before + "[+] LC_RPATH"
+        print before + green("[+]")+" LC_RPATH"
         print before + "\t- path : %s" % self.path

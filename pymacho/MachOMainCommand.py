@@ -19,6 +19,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 from struct import unpack, pack
 from pymacho.MachOLoadCommand import MachOLoadCommand
+from pymacho.Utils import green
 
 
 class MachOMainCommand(MachOLoadCommand):
@@ -45,6 +46,6 @@ class MachOMainCommand(MachOLoadCommand):
         macho_file.seek(after)
 
     def display(self, before=''):
-        print before + "[+] LC_MAIN"
+        print before + green("[+]")+" LC_MAIN"
         print before + "\t- entryoff : 0x%x" % self.entryoff
         print before + "\t- stacksize : 0x%x" % self.stacksize

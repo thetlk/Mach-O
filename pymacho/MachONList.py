@@ -18,6 +18,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
 
 from struct import unpack, pack
+from pymacho.Utils import green
 
 
 class MachONList(object):
@@ -49,7 +50,7 @@ class MachONList(object):
             macho_file.write(pack('<I', self.n_value))
 
     def display(self, before=''):
-        print before + "[+] NList item :"
+        print before + green("[+]")+" NList item :"
         print before + "\t- n_strx : 0x%08x" % self.n_strx
         print before + "\t- n_type : 0x%02x" % self.n_type
         print before + "\t- n_sect : 0x%02x" % self.n_sect

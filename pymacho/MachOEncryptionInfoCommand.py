@@ -19,6 +19,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 from struct import unpack
 from pymacho.MachOLoadCommand import MachOLoadCommand
+from pymacho.Utils import green
 
 
 class MachOEncryptionInfoCommand(MachOLoadCommand):
@@ -46,7 +47,7 @@ class MachOEncryptionInfoCommand(MachOLoadCommand):
         macho_file.seek(after)
 
     def display(self, before=''):
-        print before + "[+] LC_ENCRYPTION_INFO"
+        print before + green("[+]")+" LC_ENCRYPTION_INFO"
         print before + "\t- cryptoff : 0x%x" % self.cryptoff
         print before + "\t- cryptsize : 0x%x" % self.cryptsize
         print before + "\t- crypptid : 0x%x" % self.cryptid

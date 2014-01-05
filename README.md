@@ -15,4 +15,3 @@ Small script to write or overwrite Mach-O header, sections, and others.
 ## TODO
 - Finish MachOThreadCommand display and writing
 - Improve writing of macho file - some bugs are present
-- Add colorz!

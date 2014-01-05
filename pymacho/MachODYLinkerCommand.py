@@ -20,6 +20,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 from struct import unpack, pack
 from pymacho.MachOLoadCommand import MachOLoadCommand
 from pymacho.Constants import *
+from pymacho.Utils import green
 
 
 class MachODYLinkerCommand(MachOLoadCommand):
@@ -58,5 +59,5 @@ class MachODYLinkerCommand(MachOLoadCommand):
         macho_file.seek(after)
 
     def display(self, before=''):
-        print before + "[+] %s" % ("LC_DYLD_ENVIRONMENT" if self.cmd == LC_DYLD_ENVIRONMENT else "LC_LOAD_DYLINKER")
+        print before + green("[+]")+" %s" % ("LC_DYLD_ENVIRONMENT" if self.cmd == LC_DYLD_ENVIRONMENT else "LC_LOAD_DYLINKER")
         print before + "\t - path : %s" % self.path

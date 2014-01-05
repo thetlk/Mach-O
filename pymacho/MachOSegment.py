@@ -19,7 +19,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 from struct import unpack, pack
 from pymacho.MachOSection import MachOSection
-from pymacho.Utils import display_protection
+from pymacho.Utils import display_protection, green
 from pymacho.Constants import *
 
 
@@ -99,7 +99,7 @@ class MachOSegment(object):
         return rflags
 
     def display(self, before=''):
-        print before + "[+] %s" % self.segname
+        print before + green("[+]")+" %s" % self.segname
         print before + "\t- vmaddr : 0x%x" % self.vmaddr
         print before + "\t- vmsize : 0x%x" % self.vmsize
         print before + "\t- fileoff : 0x%x" % self.fileoff

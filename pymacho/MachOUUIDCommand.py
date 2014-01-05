@@ -19,6 +19,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 from struct import unpack, pack
 from pymacho.MachOLoadCommand import MachOLoadCommand
+from pymacho.Utils import green
 
 
 class MachOUUIDCommand(MachOLoadCommand):
@@ -45,7 +46,7 @@ class MachOUUIDCommand(MachOLoadCommand):
         macho_file.seek(after)
 
     def display(self, before=''):
-        print before + "[+] LC_UUID"
+        print before + green("[+]")+" LC_UUID"
         print before + "\t- uuid : %02X%02X%02X%02X-%02X%02X-%02X%02X-%02X%02X-%02X%02X%02X%02X%02X%02X" \
             % (self.uuid[0], self.uuid[1], self.uuid[2], self.uuid[3], self.uuid[4], self.uuid[5], self.uuid[6], \
             self.uuid[7], self.uuid[8], self.uuid[9], self.uuid[10], self.uuid[11], self.uuid[12], \

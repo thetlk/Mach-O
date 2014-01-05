@@ -20,7 +20,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 from struct import unpack, pack
 from datetime import datetime
 from pymacho.MachOLoadCommand import MachOLoadCommand
-from pymacho.Utils import int32_to_version
+from pymacho.Utils import int32_to_version, green
 from pymacho.Constants import *
 
 
@@ -78,7 +78,7 @@ class MachOLoadDYLibCommand(MachOLoadCommand):
         else:
             raise Exception('FUUUUUUUUU')
 
-        print before + "[+] %s" % name
+        print before + green("[+]")+" %s" % name
         print before + "\t- name : %s" % self.name
         print before + "\t- timestamp : %s" % datetime.fromtimestamp(self.timestamp).strftime('%Y-%m-%d %H:%M:%S')
         print before + "\t- current_version : %s" % int32_to_version(self.current_version)

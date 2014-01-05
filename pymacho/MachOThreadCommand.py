@@ -20,6 +20,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 from struct import unpack, pack
 from pymacho.Constants import *
 from pymacho.MachOLoadCommand import MachOLoadCommand
+from pymacho.Utils import green
 
 
 class MachOThreadCommand(MachOLoadCommand):
@@ -75,7 +76,7 @@ class MachOThreadCommand(MachOLoadCommand):
         macho_file.seek(after)
 
     def display(self, before=''):
-        print before + "[+] %s" % ("LC_THREAD" if self.cmd == LC_THREAD else "LC_UNIXTHREAD")
+        print before + green("[+]")+" %s" % ("LC_THREAD" if self.cmd == LC_THREAD else "LC_UNIXTHREAD")
         if self.flavor == x86_THREAD_STATE32:
             print before + "\teax = 0x%08x\tebx = 0x%08x\tecx = 0x%08x\tedx = 0x%08x" % (self.eax, self.ebx, self.ecx, self.edx)
             print before + "\tedi = 0x%08x\tesi = 0x%08x\tebp = 0x%08x\tesp = 0x%08x" % (self.edi, self.esi, self.ebp, self.esp)

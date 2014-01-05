@@ -20,6 +20,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 from struct import unpack, pack
 from pymacho.Constants import *
 from pymacho.MachORelocationInfo import MachORelocationInfo
+from pymacho.Utils import green
 
 
 class MachOSection(object):
@@ -204,7 +205,7 @@ class MachOSection(object):
         return rflags
 
     def display(self, before=''):
-        print before + "[+] %s" % self.sectname
+        print before + green("[+]")+" %s" % self.sectname
         print before + "\t- addr :0x%x" % self.addr
         print before + "\t- size : 0x%x" % self.size
         print before + "\t- offset : 0x%x" % self.offset

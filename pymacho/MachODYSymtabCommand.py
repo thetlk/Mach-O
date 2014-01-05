@@ -19,6 +19,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 from struct import unpack, pack
 from pymacho.MachOLoadCommand import MachOLoadCommand
+from pymacho.Utils import green
 
 
 class MachODYSymtabCommand(MachOLoadCommand):
@@ -76,7 +77,7 @@ class MachODYSymtabCommand(MachOLoadCommand):
         macho_file.seek(after)
 
     def display(self, before=''):
-        print before + "[+] LC_DYSYMTAB"
+        print before + green("[+]")+" LC_DYSYMTAB"
         print before + "\t- ilocalsym : 0x%x" % self.ilocalsym
         print before + "\t- nlocalsym : 0x%x" % self.nlocalsym
         print before + "\t- iextdefsym : 0x%x" % self.iextdefsym

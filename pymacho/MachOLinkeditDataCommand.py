@@ -20,6 +20,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 from struct import unpack, pack
 from pymacho.MachOLoadCommand import MachOLoadCommand
 from pymacho.Constants import *
+from pymacho.Utils import green
 
 
 class MachOLinkeditDataCommand(MachOLoadCommand):
@@ -65,6 +66,6 @@ class MachOLinkeditDataCommand(MachOLoadCommand):
         else:
             raise Exception('WHAT DA FUCK')
 
-        print before + "[+] %s" % name
+        print before + green("[+]")+" %s" % name
         print before + "\t- dataoff : 0x%x" % self.dataoff
         print before + "\t- datasize : 0x%x" % self.datasize

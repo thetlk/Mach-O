@@ -20,6 +20,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 from struct import unpack, pack
 from pymacho.MachOLoadCommand import MachOLoadCommand
 from pymacho.MachONList import MachONList
+from pymacho.Utils import green
 
 
 class MachOSymtabCommand(MachOLoadCommand):
@@ -70,7 +71,7 @@ class MachOSymtabCommand(MachOLoadCommand):
         macho_file.seek(after)
 
     def display(self, before=''):
-        print before + "[+] LC_SYMTAB"
+        print before + green("[+]")+" LC_SYMTAB"
         print before + "\t- symoff : 0x%x" % self.symoff
         print before + "\t- nsyms : %d" % self.nsyms
         for sym in self.syms:

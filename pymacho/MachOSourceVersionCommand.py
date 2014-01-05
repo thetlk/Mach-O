@@ -19,7 +19,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 from struct import unpack, pack
 from pymacho.MachOLoadCommand import MachOLoadCommand
-from pymacho.Utils import int64_to_version
+from pymacho.Utils import int64_to_version, green
 
 
 class MachOSourceVersionCommand(MachOLoadCommand):
@@ -44,5 +44,5 @@ class MachOSourceVersionCommand(MachOLoadCommand):
         macho_file.seek(after)
 
     def display(self, before=''):
-        print before + "[+] LC_SOURCE_VERSION"
+        print before + green("[+]")+" LC_SOURCE_VERSION"
         print before + "\t- version : %s" % int64_to_version(self.version)
