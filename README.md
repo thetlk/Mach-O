@@ -13,5 +13,4 @@ Small script to parse Mach-O files
 Small script to write or overwrite Mach-O header, sections, and others.
 
 ## TODO
-- Finish MachOThreadCommand display and writing
-- Improve writing of macho file - some bugs are present
+- write an example of writing in writemacho.py
