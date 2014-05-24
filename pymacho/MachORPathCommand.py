@@ -41,7 +41,7 @@ class MachORPathCommand(MachOLoadCommand):
         strlen = cmdsize - self.path_offset
         # get path
         extract = "<%s" % ('s'*strlen)
-        self.path = "".join(unpack(extract, macho_file.read(strlen))
+        self.path = "".join(unpack(extract, macho_file.read(strlen)))
 
     def write(self, macho_file):
         before = macho_file.tell()
